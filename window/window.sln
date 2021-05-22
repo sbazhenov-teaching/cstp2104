@@ -7,26 +7,32 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "window", "window\window.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "windowLib", "windowLib\windowLib.vcxproj", "{D5DA7DFC-7EF4-4304-8751-0BD35EAF6536}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "logicLib", "logicLib\logicLib.csproj", "{83EA5507-283F-4755-904E-CAB97D167E53}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "clrWrapper", "clrWrapper\clrWrapper.vcxproj", "{107C1267-C348-429B-AB47-9453070B646F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
-		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8597BA6F-7396-4F77-B5D6-47807E4DC13B}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{8597BA6F-7396-4F77-B5D6-47807E4DC13B}.Debug|x64.ActiveCfg = Debug|x64
 		{8597BA6F-7396-4F77-B5D6-47807E4DC13B}.Debug|x64.Build.0 = Debug|x64
-		{8597BA6F-7396-4F77-B5D6-47807E4DC13B}.Release|Any CPU.ActiveCfg = Release|x64
 		{8597BA6F-7396-4F77-B5D6-47807E4DC13B}.Release|x64.ActiveCfg = Release|x64
 		{8597BA6F-7396-4F77-B5D6-47807E4DC13B}.Release|x64.Build.0 = Release|x64
-		{D5DA7DFC-7EF4-4304-8751-0BD35EAF6536}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{D5DA7DFC-7EF4-4304-8751-0BD35EAF6536}.Debug|x64.ActiveCfg = Debug|x64
 		{D5DA7DFC-7EF4-4304-8751-0BD35EAF6536}.Debug|x64.Build.0 = Debug|x64
-		{D5DA7DFC-7EF4-4304-8751-0BD35EAF6536}.Release|Any CPU.ActiveCfg = Release|x64
 		{D5DA7DFC-7EF4-4304-8751-0BD35EAF6536}.Release|x64.ActiveCfg = Release|x64
 		{D5DA7DFC-7EF4-4304-8751-0BD35EAF6536}.Release|x64.Build.0 = Release|x64
+		{83EA5507-283F-4755-904E-CAB97D167E53}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{83EA5507-283F-4755-904E-CAB97D167E53}.Debug|x64.Build.0 = Debug|Any CPU
+		{83EA5507-283F-4755-904E-CAB97D167E53}.Release|x64.ActiveCfg = Release|Any CPU
+		{83EA5507-283F-4755-904E-CAB97D167E53}.Release|x64.Build.0 = Release|Any CPU
+		{107C1267-C348-429B-AB47-9453070B646F}.Debug|x64.ActiveCfg = Debug|x64
+		{107C1267-C348-429B-AB47-9453070B646F}.Debug|x64.Build.0 = Debug|x64
+		{107C1267-C348-429B-AB47-9453070B646F}.Release|x64.ActiveCfg = Release|x64
+		{107C1267-C348-429B-AB47-9453070B646F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

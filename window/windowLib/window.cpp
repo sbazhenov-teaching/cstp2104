@@ -1,14 +1,15 @@
 #include "window.h"
 #include <assert.h>
 #include <limits>
+#include <clrWrapper/wrapper.h>
 
 const wchar_t* cWndClassName{ L"ExampleWinApp" };
 
 LRESULT CALLBACK
 Window::windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    return ::DefWindowProc(hWnd, message, wParam, lParam);
-    /*
+    //return ::DefWindowProc(hWnd, message, wParam, lParam);
+
     Window* window =
         reinterpret_cast<Window*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
     if (window)
@@ -32,7 +33,7 @@ Window::windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         const DWORD lastError = ::GetLastError();
         assert(prevValue != 0 || lastError == 0);
 
-        //window->onCreate(hWnd);
+        window->onCreate(hWnd);
 
         return 0;
     }
@@ -40,7 +41,6 @@ Window::windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         return ::DefWindowProc(hWnd, message, wParam, lParam);
     }
-    */
 }
 
 Window::Window(HINSTANCE hInstance)
@@ -66,96 +66,101 @@ Window::Window(HINSTANCE hInstance)
     //assert(mHwnd);
 }
 
-//void Window::onCreate(HWND hWnd)
-//{
-//    mHwnd = hWnd;
-//    {
-//        ID2D1Factory* pD2DFactory{ nullptr };
-//        HRESULT hr = ::D2D1CreateFactory(
-//            D2D1_FACTORY_TYPE_SINGLE_THREADED,
-//            &pD2DFactory
-//        );
-//        assert(SUCCEEDED(hr));
-//        mD2DFactory = pD2DFactory;
-//    }
-//    {
-//        // Obtain the size of the drawing area.
-//        ::GetClientRect(mHwnd, &mClientRect);
-//
-//        // Create a Direct2D render target
-//        ID2D1HwndRenderTarget* pRT{ nullptr };
-//        HRESULT hr = mD2DFactory->CreateHwndRenderTarget(
-//            D2D1::RenderTargetProperties(),
-//            D2D1::HwndRenderTargetProperties(
-//                mHwnd,
-//                D2D1::SizeU(
-//                    mClientRect.right - mClientRect.left,
-//                    mClientRect.bottom - mClientRect.top)
-//            ),
-//            &pRT
-//        );
-//        assert(SUCCEEDED(hr));
-//        mRenderTarget = pRT;
-//    }
-//    {
-//        ID2D1SolidColorBrush* pBlackBrush{ nullptr };
-//        mRenderTarget->CreateSolidColorBrush(
-//            D2D1::ColorF(D2D1::ColorF::Black),
-//            &pBlackBrush
-//        );
-//        mBlackBrush = pBlackBrush;
-//    }
-//}
+void Window::onCreate(HWND hWnd)
+{
+    mHwnd = hWnd;
+    {
+        ID2D1Factory* pD2DFactory{ nullptr };
+        HRESULT hr = ::D2D1CreateFactory(
+            D2D1_FACTORY_TYPE_SINGLE_THREADED,
+            &pD2DFactory
+        );
+        assert(SUCCEEDED(hr));
 
-//LRESULT Window::processMessage(
-//    HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-//{
-//    switch (message)
-//    {
-//    case WM_CLOSE:
-//        ::PostQuitMessage(0);
-//        break;
-//    case WM_MOUSEMOVE:
-//        mX = lParam & std::numeric_limits<uint16_t>::max();
-//        mY = lParam >> 0x10;
-//        break;
-//    }
-//    return ::DefWindowProc(hWnd, message, wParam, lParam);
-//}
+        // Is a ComPtr
+        mD2DFactory = pD2DFactory;
 
-//void Window::frame()
-//{
-//    if (mMarginGrowing)
-//    {
-//        if (mMargin >= 65.f)
-//            mMarginGrowing = false;
-//        else
-//            mMargin += 1.f;
-//    }
-//    else
-//    {
-//        if (mMargin <= 5.f)
-//            mMarginGrowing = true;
-//        else
-//            mMargin -= 1.f;
-//    }
-//
-//    mRenderTarget->BeginDraw();
-//    mRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::LightGreen));
-//
-//    mRenderTarget->DrawRectangle(
-//        D2D1::RectF(
-//            mClientRect.left + mMargin,
-//            mClientRect.top + mMargin,
-//            mClientRect.right - mMargin,
-//            mClientRect.bottom - mMargin),
-//        mBlackBrush);
-//
-//    float radius = getRadius(0);
-//    mRenderTarget->DrawEllipse(D2D1::Ellipse({ FLOAT(mX), FLOAT(mY) }, radius, radius), mBlackBrush);
-//
-//    HRESULT hr = mRenderTarget->EndDraw();
-//}
+        // No need to release because ComPtr class takes care of it
+        //pD2DFactory->Release();
+    }
+    {
+        // Obtain the size of the drawing area.
+        ::GetClientRect(mHwnd, &mClientRect);
+
+        // Create a Direct2D render target
+        ID2D1HwndRenderTarget* pRT{ nullptr };
+        HRESULT hr = mD2DFactory->CreateHwndRenderTarget(
+            D2D1::RenderTargetProperties(),
+            D2D1::HwndRenderTargetProperties(
+                mHwnd,
+                D2D1::SizeU(
+                    mClientRect.right - mClientRect.left,
+                    mClientRect.bottom - mClientRect.top)
+            ),
+            &pRT
+        );
+        assert(SUCCEEDED(hr));
+        mRenderTarget = pRT;
+    }
+    {
+        ID2D1SolidColorBrush* pBlackBrush{ nullptr };
+        mRenderTarget->CreateSolidColorBrush(
+            D2D1::ColorF(D2D1::ColorF::Black),
+            &pBlackBrush
+        );
+        mBlackBrush = pBlackBrush;
+    }
+}
+
+LRESULT Window::processMessage(
+    HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_CLOSE:
+        ::PostQuitMessage(0);
+        break;
+    case WM_MOUSEMOVE:
+        mX = lParam & std::numeric_limits<uint16_t>::max();
+        mY = lParam >> 0x10;
+        break;
+    }
+    return ::DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+void Window::frame()
+{
+    if (mMarginGrowing)
+    {
+        if (mMargin >= 65.f)
+            mMarginGrowing = false;
+        else
+            mMargin += 1.f;
+    }
+    else
+    {
+        if (mMargin <= 5.f)
+            mMarginGrowing = true;
+        else
+            mMargin -= 1.f;
+    }
+
+    mRenderTarget->BeginDraw();
+    mRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::LightGreen));
+
+    mRenderTarget->DrawRectangle(
+        D2D1::RectF(
+            mClientRect.left + mMargin,
+            mClientRect.top + mMargin,
+            mClientRect.right - mMargin,
+            mClientRect.bottom - mMargin),
+        mBlackBrush);
+
+    float radius = getRadius(0);
+    mRenderTarget->DrawEllipse(D2D1::Ellipse({ FLOAT(mX), FLOAT(mY) }, radius, radius), mBlackBrush);
+
+    HRESULT hr = mRenderTarget->EndDraw();
+}
 
 //void Window::GetModuleHandle(void*)
 //{

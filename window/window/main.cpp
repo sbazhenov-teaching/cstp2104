@@ -36,10 +36,10 @@ int WINAPI WinMain(
             ::TranslateMessage(&msg);
             ::DispatchMessage(&msg);
         }
-        //else
-        //{
-        //    window.frame();
-        //}
+        else
+        {
+            window.frame();
+        }
     }
 
     return 0;
