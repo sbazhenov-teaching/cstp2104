@@ -1,8 +1,9 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by windowLib.rc
+// Used by window.rc
 //
 #define IDD_DIALOG1                     101
+#define IDD_FUN_DIALOG                  101
 
 // Next default values for new objects
 // 

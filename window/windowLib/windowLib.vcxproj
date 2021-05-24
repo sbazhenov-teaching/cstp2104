@@ -92,11 +92,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="comPtr.h" />
-    <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\clrWrapper\clrWrapper.vcxproj">

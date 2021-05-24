@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <d2d1.h>
 #include <cstdint>
-#include "comPtr.h"
+#include <windowLib/comPtr.h>
 
 class Window
 {
@@ -22,6 +22,7 @@ private:
     //void GetModuleHandle(void*);
 
     //int mDemo{ 2 };
+    HINSTANCE mHInstance;
     HWND mHwnd{ nullptr };
     RECT mClientRect;
     ComPtr<ID2D1Factory> mD2DFactory;

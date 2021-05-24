@@ -1,4 +1,5 @@
 #include "window.h"
+#include "fun_dialog.h"
 #include <assert.h>
 #include <limits>
 #include <clrWrapper/wrapper.h>
@@ -44,6 +45,7 @@ Window::windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 Window::Window(HINSTANCE hInstance)
+    : mHInstance{hInstance}
 {
     // || - or
     // | - bitwise or
@@ -110,6 +112,8 @@ void Window::onCreate(HWND hWnd)
         );
         mBlackBrush = pBlackBrush;
     }
+
+    auto value{ FunDialog::getValue(mHInstance, mHwnd) };
 }
 
 LRESULT Window::processMessage(

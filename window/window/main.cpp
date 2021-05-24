@@ -1,4 +1,4 @@
-#include <windowLib/window.h>
+#include "window.h"
 
 // Standard entry point
 //int main()
