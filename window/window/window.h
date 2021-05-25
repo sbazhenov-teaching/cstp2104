@@ -3,27 +3,19 @@
 #include <d2d1.h>
 #include <cstdint>
 #include <windowLib/comPtr.h>
+#include <windowLib/window.h>
 
-class Window
+class MainWindow
 {
 public:
-    static void registerClass();
-    static LRESULT CALLBACK
-        windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-    Window(HINSTANCE hInstance);
+    MainWindow(HINSTANCE hInstance);
 
     void frame();
 private:
-    void onCreate(HWND hWnd);
+    void onCreate(Window&);
     LRESULT processMessage(
         HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    //void GetModuleHandle(void*);
-
-    //int mDemo{ 2 };
-    HINSTANCE mHInstance;
-    HWND mHwnd{ nullptr };
     RECT mClientRect;
     ComPtr<ID2D1Factory> mD2DFactory;
     ComPtr<ID2D1HwndRenderTarget> mRenderTarget;
@@ -34,4 +26,7 @@ private:
 
     uint32_t mX{ 0 };
     uint32_t mY{ 0 };
+
+    // Initialization order matters!
+    Window mWindow;
 };

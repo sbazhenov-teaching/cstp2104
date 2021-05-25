@@ -4,73 +4,17 @@
 #include <limits>
 #include <clrWrapper/wrapper.h>
 
-const wchar_t* cWndClassName{ L"ExampleWinApp" };
-
-LRESULT CALLBACK
-Window::windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+MainWindow::MainWindow(HINSTANCE hInstance)
+    : mWindow{
+        (Window::registerClass(), hInstance),
+        [this](Window& w) { onCreate(w); },
+        [this](Window& w, UINT message, WPARAM wParam, LPARAM lParam) { return processMessage(w.getHwnd(), message, wParam, lParam); }
+      }
 {
-    //return ::DefWindowProc(hWnd, message, wParam, lParam);
-
-    Window* window =
-        reinterpret_cast<Window*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
-    if (window)
-    {
-        return window->processMessage(hWnd, message, wParam, lParam);
-    }
-    else if (message == WM_CREATE)
-    {
-        //bool a = static_cast<bool>(5);
-        //uint32_t b = static_cast<uint32_t>(1000000000000000);
-        //uint32_t c = 1000000000000000;
-
-        LPCREATESTRUCT createStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        window = reinterpret_cast<Window*>(createStruct->lpCreateParams);
-
-        ::SetLastError(0);
-        const LONG_PTR prevValue = ::SetWindowLongPtr(
-            hWnd,
-            GWLP_USERDATA,
-            reinterpret_cast<LONG_PTR>(createStruct->lpCreateParams));
-        const DWORD lastError = ::GetLastError();
-        assert(prevValue != 0 || lastError == 0);
-
-        window->onCreate(hWnd);
-
-        return 0;
-    }
-    else
-    {
-        return ::DefWindowProc(hWnd, message, wParam, lParam);
-    }
 }
 
-Window::Window(HINSTANCE hInstance)
-    : mHInstance{hInstance}
+void MainWindow::onCreate(Window& w)
 {
-    // || - or
-    // | - bitwise or
-    ::CreateWindowEx(
-        0,
-        cWndClassName,
-        L"Example",
-        (WS_VISIBLE | WS_OVERLAPPEDWINDOW) & ~WS_THICKFRAME,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        800,
-        600,
-        nullptr, // parent window
-        nullptr, // menu
-        hInstance,
-        this);
-    //Window* p = this;
-    //self.mX
-    //mX;
-    //assert(mHwnd);
-}
-
-void Window::onCreate(HWND hWnd)
-{
-    mHwnd = hWnd;
     {
         ID2D1Factory* pD2DFactory{ nullptr };
         HRESULT hr = ::D2D1CreateFactory(
@@ -87,14 +31,14 @@ void Window::onCreate(HWND hWnd)
     }
     {
         // Obtain the size of the drawing area.
-        ::GetClientRect(mHwnd, &mClientRect);
+        ::GetClientRect(w.getHwnd(), &mClientRect);
 
         // Create a Direct2D render target
         ID2D1HwndRenderTarget* pRT{ nullptr };
         HRESULT hr = mD2DFactory->CreateHwndRenderTarget(
             D2D1::RenderTargetProperties(),
             D2D1::HwndRenderTargetProperties(
-                mHwnd,
+                w.getHwnd(),
                 D2D1::SizeU(
                     mClientRect.right - mClientRect.left,
                     mClientRect.bottom - mClientRect.top)
@@ -113,10 +57,10 @@ void Window::onCreate(HWND hWnd)
         mBlackBrush = pBlackBrush;
     }
 
-    auto value{ FunDialog::getValue(mHInstance, mHwnd) };
+    auto value{ FunDialog::getValue(w.getHInstance(), w.getHwnd()) };
 }
 
-LRESULT Window::processMessage(
+LRESULT MainWindow::processMessage(
     HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -132,7 +76,7 @@ LRESULT Window::processMessage(
     return ::DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-void Window::frame()
+void MainWindow::frame()
 {
     if (mMarginGrowing)
     {
@@ -164,23 +108,4 @@ void Window::frame()
     mRenderTarget->DrawEllipse(D2D1::Ellipse({ FLOAT(mX), FLOAT(mY) }, radius, radius), mBlackBrush);
 
     HRESULT hr = mRenderTarget->EndDraw();
-}
-
-//void Window::GetModuleHandle(void*)
-//{
-//
-//}
-
-void Window::registerClass()
-{
-    HINSTANCE module = ::GetModuleHandle(NULL);
-
-    WNDCLASSEX windowClass = { 0 };
-    windowClass.cbSize = sizeof(WNDCLASSEX);
-    windowClass.lpfnWndProc = windowProc;
-    windowClass.hInstance = module;
-    windowClass.hCursor = ::LoadCursor(NULL, IDC_ARROW);
-    windowClass.lpszClassName = cWndClassName;
-    const ATOM registered = ::RegisterClassEx(&windowClass);
-    assert(registered);
 }

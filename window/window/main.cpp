@@ -20,8 +20,7 @@
 int WINAPI WinMain(
     _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-    Window::registerClass();
-    Window window(hInstance);
+    MainWindow window(hInstance);
 
     // #define replacement:
     //int a;

@@ -93,11 +93,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="comPtr.h" />
+    <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\clrWrapper\clrWrapper.vcxproj">
       <Project>{107c1267-c348-429b-ab47-9453070b646f}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
