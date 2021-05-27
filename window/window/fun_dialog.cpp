@@ -1,20 +1,44 @@
 #include "fun_dialog.h"
 #include <assert.h>
 #include <memory>
+#include <commctrl.h>
 #include "resource.h"
+
+LRESULT CALLBACK OwnerDrawButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+    LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData)
+{
+    switch (uMsg)
+    {
+    case WM_PAINT:
+
+            return TRUE;
+    }
+    return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+}
 
 INT_PTR FunDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
     case WM_INITDIALOG:
+    {
+        HWND button{ ::GetDlgItem(hwnd, IDC_CUSTOMBUTTON) };
+
+        LONG style{ ::GetWindowLong(button, GWL_STYLE) };
+        style |= BS_OWNERDRAW;
+        ::SetWindowLong(button, GWL_STYLE, style);
+
+        ::SetWindowSubclass(button, OwnerDrawButtonProc, 0, 0);
         return TRUE;
+    }
     case WM_COMMAND:
-        switch (LOWORD(wParam))
+        switch (LOWORD(wParam)) // Control identifier
         {
         case IDOK:
         case IDCANCEL:
             ::EndDialog(hwnd, 10);
+            return TRUE;
+        case IDC_CUSTOMBUTTON:
             return TRUE;
         }
     case WM_DESTROY:
