@@ -10,10 +10,17 @@ LRESULT CALLBACK OwnerDrawButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     switch (uMsg)
     {
     case WM_PAINT:
-
-            return TRUE;
+        RECT rect;
+        ::GetClientRect(hWnd, &rect);
+        HDC hdc{ ::GetDC(hWnd) };
+        HPEN hpenDot{ ::CreatePen(PS_DASHDOTDOT, 5, RGB(250, 90, 20)) };
+        ::SelectObject(hdc, hpenDot);
+        ::Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
+        ::ReleaseDC(hWnd, hdc);
+        ::DeleteObject(hpenDot);
+        return TRUE;
     }
-    return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+    return ::DefSubclassProc(hWnd, uMsg, wParam, lParam);
 }
 
 INT_PTR FunDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
