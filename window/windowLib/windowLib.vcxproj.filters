@@ -3,8 +3,10 @@
   <ItemGroup>
     <ClInclude Include="comPtr.h" />
     <ClInclude Include="window.h" />
+    <ClInclude Include="customButton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="window.cpp" />
+    <ClCompile Include="customButton.cpp" />
   </ItemGroup>
 </Project>

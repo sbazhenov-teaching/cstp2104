@@ -1,27 +1,8 @@
 #include "fun_dialog.h"
 #include <assert.h>
 #include <memory>
-#include <commctrl.h>
 #include "resource.h"
-
-LRESULT CALLBACK OwnerDrawButtonProc(HWND hWnd, UINT uMsg, WPARAM wParam,
-    LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData)
-{
-    switch (uMsg)
-    {
-    case WM_PAINT:
-        RECT rect;
-        ::GetClientRect(hWnd, &rect);
-        HDC hdc{ ::GetDC(hWnd) };
-        HPEN hpenDot{ ::CreatePen(PS_DASHDOTDOT, 5, RGB(250, 90, 20)) };
-        ::SelectObject(hdc, hpenDot);
-        ::Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
-        ::ReleaseDC(hWnd, hdc);
-        ::DeleteObject(hpenDot);
-        return TRUE;
-    }
-    return ::DefSubclassProc(hWnd, uMsg, wParam, lParam);
-}
+#include <windowLib/customButton.h>
 
 INT_PTR FunDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -30,12 +11,7 @@ INT_PTR FunDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam
     case WM_INITDIALOG:
     {
         HWND button{ ::GetDlgItem(hwnd, IDC_CUSTOMBUTTON) };
-
-        LONG style{ ::GetWindowLong(button, GWL_STYLE) };
-        style |= BS_OWNERDRAW;
-        ::SetWindowLong(button, GWL_STYLE, style);
-
-        ::SetWindowSubclass(button, OwnerDrawButtonProc, 0, 0);
+        CustomButton::assignButton(button);
         return TRUE;
     }
     case WM_COMMAND:
