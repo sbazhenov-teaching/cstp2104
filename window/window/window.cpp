@@ -1,5 +1,4 @@
 #include "window.h"
-#include "fun_dialog.h"
 #include <assert.h>
 #include <limits>
 #include <clrWrapper/wrapper.h>

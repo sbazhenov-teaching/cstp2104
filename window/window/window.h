@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <windowLib/comPtr.h>
 #include <windowLib/window.h>
+#include "fun_dialog.h"
 
 class MainWindow
 {
@@ -29,4 +30,5 @@ private:
 
     // Initialization order matters!
     Window mWindow;
+    FunDialog mDialog;
 };

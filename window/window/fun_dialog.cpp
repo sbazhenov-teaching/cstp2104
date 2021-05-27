@@ -2,7 +2,6 @@
 #include <assert.h>
 #include <memory>
 #include "resource.h"
-#include <windowLib/customButton.h>
 
 INT_PTR FunDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -11,7 +10,8 @@ INT_PTR FunDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam
     case WM_INITDIALOG:
     {
         HWND button{ ::GetDlgItem(hwnd, IDC_CUSTOMBUTTON) };
-        CustomButton::assignButton(button);
+        FunDialog* dialog{ reinterpret_cast<FunDialog*>(lParam) };
+        dialog->mCustomButton.assignButton(button);
         return TRUE;
     }
     case WM_COMMAND:
@@ -32,8 +32,10 @@ INT_PTR FunDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam
 
 uint64_t FunDialog::getValue(HINSTANCE hInstance, HWND parent)
 {
-    static_assert(sizeof(INT_PTR) == sizeof(unsigned long long));
-    uint64_t value{ static_cast<uint64_t>(::DialogBox(hInstance, MAKEINTRESOURCE(IDD_FUN_DIALOG), parent, Dlgproc)) };
+    FunDialog dialog;
+    static_assert(sizeof(&dialog) == sizeof(LPARAM));
+    // DialogBoxParamW is blocking, so it's ok to pass the pointer
+    uint64_t value{ static_cast<uint64_t>(::DialogBoxParamW(hInstance, MAKEINTRESOURCE(IDD_FUN_DIALOG), parent, Dlgproc, reinterpret_cast<LPARAM>(&dialog))) };
 
     return value;
     //if (!hwnd)

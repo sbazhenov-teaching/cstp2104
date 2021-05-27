@@ -4,7 +4,8 @@
 class CustomButton
 {
 public:
-    static void assignButton(HWND);
+    void assignButton(HWND);
+
 private:
     static LRESULT CALLBACK buttonProc(HWND hWnd, UINT uMsg, WPARAM wParam,
         LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData);

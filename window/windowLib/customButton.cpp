@@ -7,10 +7,10 @@ void CustomButton::assignButton(HWND button)
     style |= BS_OWNERDRAW;
     ::SetWindowLong(button, GWL_STYLE, style);
 
-    //const LONG_PTR prevValue{ ::SetWindowLongPtr(
-    //    button,
-    //    GWLP_USERDATA,
-    //    reinterpret_cast<LONG_PTR>(createStruct->lpCreateParams)) };
+    const LONG_PTR prevValue{ ::SetWindowLongPtr(
+        button,
+        GWLP_USERDATA,
+        reinterpret_cast<LONG_PTR>(this)) };
 
     ::SetWindowSubclass(button, CustomButton::buttonProc, 0, 0);
 }
@@ -21,6 +21,9 @@ LRESULT CALLBACK CustomButton::buttonProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     switch (uMsg)
     {
     case WM_PAINT:
+        CustomButton* button =
+            reinterpret_cast<CustomButton*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
+
         RECT rect;
         ::GetClientRect(hWnd, &rect);
         HDC hdc{ ::GetDC(hWnd) };
