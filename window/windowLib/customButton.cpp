@@ -11,6 +11,8 @@ void CustomButton::assignButton(HWND button)
         button,
         GWLP_USERDATA,
         reinterpret_cast<LONG_PTR>(this)) };
+    mHwnd = button;
+    ::GetClientRect(button, &mRect);
 
     ::SetWindowSubclass(button, CustomButton::buttonProc, 0, 0);
 }
@@ -18,21 +20,28 @@ void CustomButton::assignButton(HWND button)
 LRESULT CALLBACK CustomButton::buttonProc(HWND hWnd, UINT uMsg, WPARAM wParam,
     LPARAM lParam, UINT_PTR uIdSubclass, DWORD_PTR dwRefData)
 {
+    CustomButton* button{
+        reinterpret_cast<CustomButton*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA)) };
+    return button->processMsg(uMsg, wParam, lParam);
+}
+
+LRESULT CustomButton::processMsg(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
     switch (uMsg)
     {
     case WM_PAINT:
-        CustomButton* button =
-            reinterpret_cast<CustomButton*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
-
-        RECT rect;
-        ::GetClientRect(hWnd, &rect);
-        HDC hdc{ ::GetDC(hWnd) };
+    {
+        /*RECT rect;
+        ::GetClientRect(mHwnd, &rect);*/
+        HDC hdc{ ::GetDC(mHwnd) };
         HPEN hpenDot{ ::CreatePen(PS_DASHDOTDOT, 5, RGB(250, 90, 60)) };
         ::SelectObject(hdc, hpenDot);
-        ::Rectangle(hdc, rect.left, rect.top, rect.right, rect.bottom);
-        ::ReleaseDC(hWnd, hdc);
+        ::Rectangle(hdc, mRect.left, mRect.top, mRect.right, mRect.bottom);
+        ::ReleaseDC(mHwnd, hdc);
         ::DeleteObject(hpenDot);
         return TRUE;
     }
-    return ::DefSubclassProc(hWnd, uMsg, wParam, lParam);
+
+    }
+    return ::DefSubclassProc(mHwnd, uMsg, wParam, lParam);
 }
