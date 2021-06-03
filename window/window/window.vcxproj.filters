@@ -4,13 +4,18 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="fun_dialog.cpp" />
     <ClCompile Include="window.cpp" />
+    <ClCompile Include="image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="fun_dialog.h" />
     <ClInclude Include="window.h" />
+    <ClInclude Include="image.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="window.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="moon.jpg" />
   </ItemGroup>
 </Project>

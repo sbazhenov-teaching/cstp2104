@@ -21,6 +21,7 @@ private:
     ComPtr<ID2D1Factory> mD2DFactory;
     ComPtr<ID2D1HwndRenderTarget> mRenderTarget;
     ComPtr<ID2D1SolidColorBrush> mBlackBrush;
+    ComPtr<ID2D1Bitmap> mBitmap;
 
     float mMargin{ 5.0f };
     bool mMarginGrowing{ true };
