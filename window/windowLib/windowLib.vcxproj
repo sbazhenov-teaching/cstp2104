@@ -65,7 +65,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>D2d1.lib;clrWrapper.lib</AdditionalDependencies>
+      <AdditionalDependencies>Comctl32.lib;D2d1.lib;clrWrapper.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
@@ -87,21 +87,23 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>D2d1.lib;clrWrapper.lib</AdditionalDependencies>
+      <AdditionalDependencies>Comctl32.lib;D2d1.lib;clrWrapper.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="comPtr.h" />
+    <ClInclude Include="customButton.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\clrWrapper\clrWrapper.vcxproj">
       <Project>{107c1267-c348-429b-ab47-9453070b646f}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="customButton.cpp" />
+    <ClCompile Include="window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,6 @@
 #pragma once
 #include <Windows.h>
-#include <d2d1.h>
-#include <cstdint>
-#include "comPtr.h"
+#include <functional>
 
 class Window
 {
@@ -11,26 +9,18 @@ public:
     static LRESULT CALLBACK
         windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    Window(HINSTANCE hInstance);
+    using OnCreate = std::function<void(Window&)>;
+    using OnMessage = std::function<LRESULT(
+        Window&, UINT message, WPARAM wParam, LPARAM lParam)>;
 
-    void frame();
-private:
-    void onCreate(HWND hWnd);
-    LRESULT processMessage(
-        HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    Window(HINSTANCE hInstance, OnCreate, OnMessage);
 
-    //void GetModuleHandle(void*);
-
-    //int mDemo{ 2 };
+    HINSTANCE getHInstance() const;
+    HWND getHwnd() const;
+protected:
+    OnCreate mOnCreate;
+    OnMessage mOnMessage;
+    HINSTANCE mHInstance;
     HWND mHwnd{ nullptr };
-    RECT mClientRect;
-    ComPtr<ID2D1Factory> mD2DFactory;
-    ComPtr<ID2D1HwndRenderTarget> mRenderTarget;
-    ComPtr<ID2D1SolidColorBrush> mBlackBrush;
-
-    float mMargin{ 5.0f };
-    bool mMarginGrowing{ true };
-
-    uint32_t mX{ 0 };
-    uint32_t mY{ 0 };
 };
+
