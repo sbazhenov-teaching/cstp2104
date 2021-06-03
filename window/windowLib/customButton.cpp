@@ -1,5 +1,6 @@
 #include "customButton.h"
 #include <commctrl.h>
+#include <assert.h>
 
 void CustomButton::assignButton(HWND button)
 {
@@ -12,7 +13,7 @@ void CustomButton::assignButton(HWND button)
         GWLP_USERDATA,
         reinterpret_cast<LONG_PTR>(this)) };
     mHwnd = button;
-    ::GetClientRect(button, &mRect);
+    ::GetClientRect(button, &mClientRect);
 
     ::SetWindowSubclass(button, CustomButton::buttonProc, 0, 0);
 }
@@ -36,7 +37,7 @@ LRESULT CustomButton::processMsg(UINT uMsg, WPARAM wParam, LPARAM lParam)
         HDC hdc{ ::GetDC(mHwnd) };
         HPEN hpenDot{ ::CreatePen(PS_DASHDOTDOT, 5, RGB(250, 90, 60)) };
         ::SelectObject(hdc, hpenDot);
-        ::Rectangle(hdc, mRect.left, mRect.top, mRect.right, mRect.bottom);
+        ::Rectangle(hdc, mClientRect.left, mClientRect.top, mClientRect.right, mClientRect.bottom);
         ::ReleaseDC(mHwnd, hdc);
         ::DeleteObject(hpenDot);
         return TRUE;

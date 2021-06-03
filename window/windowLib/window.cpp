@@ -49,7 +49,7 @@ HWND Window::getHwnd() const
 
 Window::Window(HINSTANCE hInstance, OnCreate onCreate, OnMessage onMessage)
     : mOnCreate{ std::move(onCreate) }
-    , mOnMessage{std::move(onMessage )}
+    , mOnMessage{ std::move(onMessage) }
     , mHInstance{ hInstance }
 {
     // || - or

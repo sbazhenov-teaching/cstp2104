@@ -16,5 +16,5 @@ private:
     HWND mHwnd;
     uint32_t mX;
     uint32_t mY;
-    RECT mRect;
+    RECT mClientRect;
 };

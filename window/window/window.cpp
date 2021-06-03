@@ -3,6 +3,15 @@
 #include <limits>
 #include <clrWrapper/wrapper.h>
 
+//class Lambda
+//{
+//public:
+//    Lambda(MainWindow* ptr) : mPtr{ ptr } {}
+//    void operator()(Window& w) { mPtr->onCreate(w); }
+//private:
+//    MainWindow* mPtr;
+//};
+
 MainWindow::MainWindow(HINSTANCE hInstance)
     : mWindow{
         (Window::registerClass(), hInstance),
@@ -10,6 +19,8 @@ MainWindow::MainWindow(HINSTANCE hInstance)
         [this](Window& w, UINT message, WPARAM wParam, LPARAM lParam) { return processMessage(w.getHwnd(), message, wParam, lParam); }
       }
 {
+    //Lambda l(this);
+    //l(mWindow);
 }
 
 void MainWindow::onCreate(Window& w)

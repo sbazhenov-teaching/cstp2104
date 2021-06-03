@@ -30,5 +30,4 @@ private:
 
     // Initialization order matters!
     Window mWindow;
-    FunDialog mDialog;
 };
