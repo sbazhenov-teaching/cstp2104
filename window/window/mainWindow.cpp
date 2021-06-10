@@ -3,6 +3,7 @@
 #include <limits>
 #include <clrWrapper/wrapper.h>
 #include "image.h"
+#include "registry.h"
 
 //class Lambda
 //{
@@ -17,7 +18,8 @@ MainWindow::MainWindow(HINSTANCE hInstance)
     : mWindow{
         (Window::registerClass(), hInstance),
         [this](Window& w) { onCreate(w); },
-        [this](Window& w, UINT message, WPARAM wParam, LPARAM lParam) { return processMessage(w.getHwnd(), message, wParam, lParam); }
+        [this](Window& w, UINT message, WPARAM wParam, LPARAM lParam) { return processMessage(w.getHwnd(), message, wParam, lParam); },
+        Registry::getStrKey(HKEY_CURRENT_USER, L"SOFTWARE\\CSTP2104\\WindowApp", L"Caption")
       }
 {
     //Lambda l(this);

@@ -47,7 +47,7 @@ HWND Window::getHwnd() const
     return mHwnd;
 }
 
-Window::Window(HINSTANCE hInstance, OnCreate onCreate, OnMessage onMessage)
+Window::Window(HINSTANCE hInstance, OnCreate onCreate, OnMessage onMessage, const std::wstring& caption)
     : mOnCreate{ std::move(onCreate) }
     , mOnMessage{ std::move(onMessage) }
     , mHInstance{ hInstance }
@@ -57,7 +57,7 @@ Window::Window(HINSTANCE hInstance, OnCreate onCreate, OnMessage onMessage)
     ::CreateWindowEx(
         0,
         cWndClassName,
-        L"Example",
+        caption.c_str(),
         (WS_VISIBLE | WS_OVERLAPPEDWINDOW) & ~WS_THICKFRAME,
         CW_USEDEFAULT,
         CW_USEDEFAULT,

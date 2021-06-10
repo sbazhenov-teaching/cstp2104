@@ -13,7 +13,7 @@ public:
     using OnMessage = std::function<LRESULT(
         Window&, UINT message, WPARAM wParam, LPARAM lParam)>;
 
-    Window(HINSTANCE hInstance, OnCreate, OnMessage);
+    Window(HINSTANCE hInstance, OnCreate, OnMessage, const std::wstring& caption);
 
     HINSTANCE getHInstance() const;
     HWND getHwnd() const;
