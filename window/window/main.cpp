@@ -1,4 +1,4 @@
-#include "window.h"
+#include "mainWindow.h"
 #include <assert.h>
 
 // Standard entry point

@@ -93,13 +93,13 @@
     <ClCompile Include="fun_dialog.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="window.cpp" />
+    <ClCompile Include="mainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fun_dialog.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="window.h" />
+    <ClInclude Include="mainWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="window.rc" />

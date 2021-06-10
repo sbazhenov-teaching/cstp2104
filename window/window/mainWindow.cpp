@@ -1,4 +1,4 @@
-#include "window.h"
+#include "mainWindow.h"
 #include <assert.h>
 #include <limits>
 #include <clrWrapper/wrapper.h>
@@ -70,7 +70,7 @@ void MainWindow::onCreate(Window& w)
 
     mBitmap = loadImage(mRenderTarget);
 
-    auto value{ FunDialog::getValue(w.getHInstance(), w.getHwnd()) };
+    //auto value{ FunDialog::getValue(w.getHInstance(), w.getHwnd()) };
 }
 
 LRESULT MainWindow::processMessage(
