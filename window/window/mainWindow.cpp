@@ -72,6 +72,8 @@ void MainWindow::onCreate(Window& w)
 
     mBitmap = loadImage(mRenderTarget);
 
+    mInput.init(mWindow.getHwnd());
+
     //auto value{ FunDialog::getValue(w.getHInstance(), w.getHwnd()) };
 }
 
@@ -84,8 +86,29 @@ LRESULT MainWindow::processMessage(
         ::PostQuitMessage(0);
         break;
     case WM_MOUSEMOVE:
-        mX = lParam & std::numeric_limits<uint16_t>::max();
-        mY = lParam >> 0x10;
+        //mX = lParam & std::numeric_limits<uint16_t>::max();
+        //mY = lParam >> 0x10;
+        break;
+    case WM_INPUT:
+    {
+        Input::Key key{ mInput.process(lParam) };
+        const float step{ 10 };
+        switch (key)
+        {
+        case Input::Key::Right:
+            mX += step;
+            break;
+        case Input::Key::Left:
+            mX -= step;
+            break;
+        case Input::Key::Down:
+            mY += step;
+            break;
+        case Input::Key::Up:
+            mY -= step;
+            break;
+        }
+    }
         break;
     }
     return ::DefWindowProc(hWnd, message, wParam, lParam);

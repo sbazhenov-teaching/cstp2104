@@ -6,6 +6,7 @@
     <ClCompile Include="mainWindow.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="registry.cpp" />
+    <ClCompile Include="input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -13,6 +14,7 @@
     <ClInclude Include="mainWindow.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="registry.h" />
+    <ClInclude Include="input.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="window.rc" />

@@ -5,6 +5,7 @@
 #include <windowLib/comPtr.h>
 #include <windowLib/window.h>
 #include "fun_dialog.h"
+#include "input.h"
 
 class MainWindow
 {
@@ -31,4 +32,6 @@ private:
 
     // Initialization order matters!
     Window mWindow;
+
+    Input mInput;
 };
