@@ -3,9 +3,20 @@
 #include <assert.h>
 #include <windowLib/comPtr.h>
 
-ID2D1Bitmap* loadImage(ID2D1HwndRenderTarget* rt)
+ComPtr<ID2D1Bitmap> loadImage(ID2D1HwndRenderTarget* rt)
 {
     HRSRC picResHandle{ ::FindResource(NULL, MAKEINTRESOURCE(IDB_BITMAP1), L"JPG") };
+
+    {
+        DWORD err{ ::GetLastError() };
+        //void* p = ::malloc(5);
+        //::free(p);
+        LPWSTR messageBuffer{ nullptr };
+        DWORD size{ ::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPWSTR>(&messageBuffer), 0, NULL) };
+        ::LocalFree(messageBuffer);
+    }
+
     assert(picResHandle);
 
     HGLOBAL imageResDataHandle{ ::LoadResource(NULL, picResHandle) };
@@ -18,6 +29,8 @@ ID2D1Bitmap* loadImage(ID2D1HwndRenderTarget* rt)
     assert(picSize);
 
     ComPtr<IWICImagingFactory> factory;
+    // Illegal if there is no copy constructor
+    //ComPtr<IWICImagingFactory> factory2{ factory };
     {
         IWICImagingFactory* pFactory = NULL;
         // Create the COM imaging factory

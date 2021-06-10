@@ -117,17 +117,19 @@ void MainWindow::frame()
             mClientRect.bottom - mMargin),
         mBlackBrush);
 
-    D2D1_RECT_F rectf;
-    rectf.top = 0.f;
-    rectf.left = 0.f;
-    rectf.right = 300.f;
-    rectf.bottom = 600.f;
-    D2D1_RECT_F rectfSource;
-    rectfSource.top = 0.f;
-    rectfSource.left = 0.f;
-    rectfSource.right = mBitmap->GetSize().width / 2;
-    rectfSource.bottom = mBitmap->GetSize().height;
-    mRenderTarget->DrawBitmap(mBitmap, rectf, 0.7, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, rectfSource);
+    {
+        D2D1_RECT_F rectf;
+        rectf.top = 0.f;
+        rectf.left = 0.f;
+        rectf.right = 300.f;
+        rectf.bottom = 600.f;
+        D2D1_RECT_F rectfSource;
+        rectfSource.top = 0.f;
+        rectfSource.left = 0.f;
+        rectfSource.right = mBitmap->GetSize().width / 2;
+        rectfSource.bottom = mBitmap->GetSize().height;
+        mRenderTarget->DrawBitmap(mBitmap, rectf, 0.7, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, rectfSource);
+    }
 
     float radius = getRadius(0);
     mRenderTarget->DrawEllipse(D2D1::Ellipse({ FLOAT(mX), FLOAT(mY) }, radius, radius), mBlackBrush);
