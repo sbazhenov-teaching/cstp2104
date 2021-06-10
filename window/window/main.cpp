@@ -1,4 +1,5 @@
 #include "window.h"
+#include <assert.h>
 
 // Standard entry point
 //int main()
@@ -20,6 +21,12 @@
 int WINAPI WinMain(
     _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
+    // Initialize COM
+    {
+        HRESULT hr{ ::CoInitialize(NULL) };
+        assert(hr == S_OK);
+    }
+
     MainWindow window(hInstance);
 
     // #define replacement:

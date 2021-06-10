@@ -91,11 +91,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="fun_dialog.cpp" />
+    <ClCompile Include="image.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fun_dialog.h" />
+    <ClInclude Include="image.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
@@ -106,6 +108,9 @@
     <ProjectReference Include="..\windowLib\windowLib.vcxproj">
       <Project>{d5da7dfc-7ef4-4304-8751-0bd35eaf6536}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="moon.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
