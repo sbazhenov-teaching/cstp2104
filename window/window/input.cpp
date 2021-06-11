@@ -34,24 +34,26 @@ void Input::init(HWND hwnd)
 Input::Key Input::process(LPARAM lParam)
 {
     RAWINPUT input;
-    UINT size;
+    {
+        UINT size;
 
-    const UINT probeResult{ ::GetRawInputData(
-        reinterpret_cast<HRAWINPUT>(lParam),
-        RID_INPUT,
-        nullptr,
-        &size,
-        sizeof(RAWINPUTHEADER)) };
-    assert(probeResult == 0);
-    assert(size <= sizeof(RAWINPUT));
+        const UINT probeResult{ ::GetRawInputData(
+            reinterpret_cast<HRAWINPUT>(lParam),
+            RID_INPUT,
+            nullptr,
+            &size,
+            sizeof(RAWINPUTHEADER)) };
+        assert(probeResult == 0);
+        assert(size <= sizeof(input));
 
-    const UINT result{ ::GetRawInputData(
-        reinterpret_cast<HRAWINPUT>(lParam),
-        RID_INPUT,
-        &input,
-        &size,
-        sizeof(RAWINPUTHEADER)) };
-    assert(result <= sizeof(RAWINPUT)) ;
+        const UINT result{ ::GetRawInputData(
+            reinterpret_cast<HRAWINPUT>(lParam),
+            RID_INPUT,
+            &input,
+            &size,
+            sizeof(RAWINPUTHEADER)) };
+        assert(result <= sizeof(RAWINPUT));
+    }
 
     switch (input.header.dwType)
     {

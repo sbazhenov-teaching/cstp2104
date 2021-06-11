@@ -19,7 +19,7 @@ MainWindow::MainWindow(HINSTANCE hInstance)
         (Window::registerClass(), hInstance),
         [this](Window& w) { onCreate(w); },
         [this](Window& w, UINT message, WPARAM wParam, LPARAM lParam) { return processMessage(w.getHwnd(), message, wParam, lParam); },
-        Registry::getStrKey(HKEY_CURRENT_USER, L"SOFTWARE\\CSTP2104\\WindowApp", L"Caption")
+        Registry::getStrKey(HKEY_CURRENT_USER, L"SOFTWARE\\CSTP2104\\WindowApp\0asdfasdf", L"Caption")
       }
 {
     //Lambda l(this);
@@ -74,7 +74,15 @@ void MainWindow::onCreate(Window& w)
 
     mInput.init(mWindow.getHwnd());
 
-    //auto value{ FunDialog::getValue(w.getHInstance(), w.getHwnd()) };
+    mCircleThread = std::thread([this]() {
+        // The same
+        //std::this_thread::sleep_for(std::chrono::seconds(15));
+        //::Sleep(5000);
+
+        circleThread();
+        });
+
+    auto value{ FunDialog::getValue(w.getHInstance(), w.getHwnd()) };
 }
 
 LRESULT MainWindow::processMessage(
@@ -83,6 +91,9 @@ LRESULT MainWindow::processMessage(
     switch (message)
     {
     case WM_CLOSE:
+        mStopping = true;
+        assert(mCircleThread.joinable());
+        mCircleThread.join();
         ::PostQuitMessage(0);
         break;
     case WM_MOUSEMOVE:
@@ -93,6 +104,7 @@ LRESULT MainWindow::processMessage(
     {
         Input::Key key{ mInput.process(lParam) };
         const float step{ 10 };
+        std::lock_guard<std::mutex> lock(mCircleMutex);
         switch (key)
         {
         case Input::Key::Right:
@@ -112,6 +124,20 @@ LRESULT MainWindow::processMessage(
         break;
     }
     return ::DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+void MainWindow::circleThread()
+{
+    while (!mStopping)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(33));
+
+        std::unique_lock<std::mutex> lock(mCircleMutex);
+        mX += 1;
+        //mCircleMutex.lock();
+        //// do whatever - exclusive access guaranteed
+        //mCircleMutex.unlock();
+    }
 }
 
 void MainWindow::frame()
@@ -157,7 +183,10 @@ void MainWindow::frame()
     }
 
     float radius = getRadius(0);
-    mRenderTarget->DrawEllipse(D2D1::Ellipse({ FLOAT(mX), FLOAT(mY) }, radius, radius), mBlackBrush);
+    {
+        std::lock_guard<std::mutex> lock(mCircleMutex);
+        mRenderTarget->DrawEllipse(D2D1::Ellipse({ FLOAT(mX), FLOAT(mY) }, radius, radius), mBlackBrush);
+    }
 
     HRESULT hr = mRenderTarget->EndDraw();
 }

@@ -6,6 +6,8 @@
 #include <windowLib/window.h>
 #include "fun_dialog.h"
 #include "input.h"
+#include <thread>
+#include <mutex>
 
 class MainWindow
 {
@@ -17,6 +19,7 @@ private:
     void onCreate(Window&);
     LRESULT processMessage(
         HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    void circleThread();
 
     RECT mClientRect;
     ComPtr<ID2D1Factory> mD2DFactory;
@@ -29,8 +32,11 @@ private:
 
     uint32_t mX{ 0 };
     uint32_t mY{ 0 };
+    std::mutex mCircleMutex;
+    bool mStopping{ false };
 
     // Initialization order matters!
+    std::thread mCircleThread;
     Window mWindow;
 
     Input mInput;
