@@ -8,6 +8,7 @@
 #include "input.h"
 #include <thread>
 #include <mutex>
+#include <windowLib/threadPool.h>
 
 class MainWindow
 {
@@ -37,6 +38,7 @@ private:
 
     // Initialization order matters!
     std::thread mCircleThread;
+    ThreadPool<2> mThreadPool;
     Window mWindow;
 
     Input mInput;

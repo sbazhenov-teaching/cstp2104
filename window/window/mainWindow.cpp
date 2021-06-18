@@ -119,6 +119,9 @@ LRESULT MainWindow::processMessage(
         case Input::Key::Up:
             mY -= step;
             break;
+        case Input::Key::Space:
+            mThreadPool.post([]() { std::this_thread::sleep_for(std::chrono::seconds(10)); });
+            break;
         }
     }
         break;

@@ -4,6 +4,7 @@
     <ClInclude Include="comPtr.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="customButton.h" />
+    <ClInclude Include="threadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="window.cpp" />

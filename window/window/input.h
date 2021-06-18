@@ -10,6 +10,7 @@ public:
         Right,
         Up,
         Down,
+        Space,
         None
     };
 

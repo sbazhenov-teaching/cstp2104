@@ -77,6 +77,8 @@ Input::Key Input::process(LPARAM lParam)
             case VK_RIGHT:
             case VKEY_D:
                 return Key::Right;
+            case VK_SPACE:
+                return Key::Space;
             }
         }
         else if (

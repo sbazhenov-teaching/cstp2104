@@ -94,6 +94,7 @@
   <ItemGroup>
     <ClInclude Include="comPtr.h" />
     <ClInclude Include="customButton.h" />
+    <ClInclude Include="threadPool.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
