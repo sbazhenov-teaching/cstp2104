@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "logicLib", "logicLib\logicL
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "clrWrapper", "clrWrapper\clrWrapper.vcxproj", "{107C1267-C348-429B-AB47-9453070B646F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client.vcxproj", "{554CAB0B-7E16-4985-B913-617B04F0C164}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -33,6 +35,10 @@ Global
 		{107C1267-C348-429B-AB47-9453070B646F}.Debug|x64.Build.0 = Debug|x64
 		{107C1267-C348-429B-AB47-9453070B646F}.Release|x64.ActiveCfg = Release|x64
 		{107C1267-C348-429B-AB47-9453070B646F}.Release|x64.Build.0 = Release|x64
+		{554CAB0B-7E16-4985-B913-617B04F0C164}.Debug|x64.ActiveCfg = Debug|x64
+		{554CAB0B-7E16-4985-B913-617B04F0C164}.Debug|x64.Build.0 = Debug|x64
+		{554CAB0B-7E16-4985-B913-617B04F0C164}.Release|x64.ActiveCfg = Release|x64
+		{554CAB0B-7E16-4985-B913-617B04F0C164}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

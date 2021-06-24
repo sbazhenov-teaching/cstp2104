@@ -34,7 +34,6 @@ int WINAPI WinMain(
     //int 5;
 
     MSG msg = {};
-    int counter = 0;
     while (msg.message != WM_QUIT)
     {
         if (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
