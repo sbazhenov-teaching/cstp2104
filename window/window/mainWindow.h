@@ -21,6 +21,7 @@ private:
     LRESULT processMessage(
         HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void circleThread();
+    void getFromClient();
 
     RECT mClientRect;
     ComPtr<ID2D1Factory> mD2DFactory;

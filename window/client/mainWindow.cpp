@@ -1,4 +1,5 @@
 #include "mainWindow.h"
+#include "clientConnection.h"
 
 INT_PTR MainDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -18,6 +19,7 @@ INT_PTR MainDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
             ::EndDialog(hwnd, 10);
             return TRUE;
         case IDC_BUTTON1:
+            sendToServer();
             ::EndDialog(hwnd, 10);
             return TRUE;
         }

@@ -3,10 +3,12 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainWindow.cpp" />
+    <ClCompile Include="clientConnection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mainWindow.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="clientConnection.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="client.rc" />
