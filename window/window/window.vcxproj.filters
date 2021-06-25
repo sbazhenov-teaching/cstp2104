@@ -7,6 +7,7 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="registry.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -15,6 +16,7 @@
     <ClInclude Include="image.h" />
     <ClInclude Include="registry.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="server.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="window.rc" />

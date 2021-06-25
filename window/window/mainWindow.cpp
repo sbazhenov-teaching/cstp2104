@@ -4,6 +4,7 @@
 #include <clrWrapper/wrapper.h>
 #include "image.h"
 #include "registry.h"
+#include "server.h"
 
 //class Lambda
 //{
@@ -82,7 +83,7 @@ void MainWindow::onCreate(Window& w)
         circleThread();
         });
 
-    auto value{ FunDialog::getValue(w.getHInstance(), w.getHwnd()) };
+    //auto value{ FunDialog::getValue(w.getHInstance(), w.getHwnd()) };
 }
 
 LRESULT MainWindow::processMessage(
@@ -120,7 +121,8 @@ LRESULT MainWindow::processMessage(
             mY -= step;
             break;
         case Input::Key::Space:
-            mThreadPool.post([]() { std::this_thread::sleep_for(std::chrono::seconds(10)); });
+            //mThreadPool.post([]() { std::this_thread::sleep_for(std::chrono::seconds(10)); });
+            mThreadPool.post([this]() { getFromClient(); });
             break;
         }
     }
@@ -141,6 +143,11 @@ void MainWindow::circleThread()
         //// do whatever - exclusive access guaranteed
         //mCircleMutex.unlock();
     }
+}
+
+void MainWindow::getFromClient()
+{
+    Server::serve();
 }
 
 void MainWindow::frame()
