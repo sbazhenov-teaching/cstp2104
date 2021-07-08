@@ -5,9 +5,9 @@
 namespace Network
 {
 
-AddrInfo::AddrInfo(PCSTR pServiceName, const ADDRINFOA* pHints)
+AddrInfo::AddrInfo(PCSTR pNodeName, PCSTR pServiceName, const ADDRINFOA* pHints)
 {
-    int result = ::getaddrinfo(nullptr, pServiceName, pHints, &mResult);
+    int result = ::getaddrinfo(pNodeName, pServiceName, pHints, &mResult);
     assert(result == 0);
 }
 
@@ -17,6 +17,11 @@ AddrInfo::~AddrInfo()
 }
 
 addrinfo* AddrInfo::operator->() const
+{
+    return mResult;
+}
+
+AddrInfo::operator addrinfo* () const
 {
     return mResult;
 }

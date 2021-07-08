@@ -3,57 +3,48 @@
 #include <ws2tcpip.h>
 #include <networkLib/winSock.h>
 #include <networkLib/socket.h>
+#include <networkLib/addrInfo.h>
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
 void sendToServer()
 {
-    struct addrinfo* result = NULL,
-        * ptr = NULL,
-        hints;
     const char* sendbuf = "this is a test";
     char recvbuf[DEFAULT_BUFLEN];
     int iResult;
     int recvbuflen = DEFAULT_BUFLEN;
 
     Network::WinSock winSock;
-
-    ZeroMemory(&hints, sizeof(hints));
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-
-    // Resolve the server address and port
-    iResult = ::getaddrinfo("localhost", DEFAULT_PORT, &hints, &result);
-    if (iResult != 0) {
-        //printf("getaddrinfo failed with error: %d\n", iResult);
-        return;
-        //return 1;
-    }
-
     Network::Socket connectSocket;
+    {
+        addrinfo hints;
+        ZeroMemory(&hints, sizeof(hints));
+        hints.ai_family = AF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = IPPROTO_TCP;
 
-    // Attempt to connect to an address until one succeeds
-    for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
+        Network::AddrInfo addrInfo{ "localhost", DEFAULT_PORT, &hints };
 
-        // Create a SOCKET for connecting to server
-        connectSocket = Network::Socket(ptr->ai_family, ptr->ai_socktype,
-            ptr->ai_protocol);
-        if (!connectSocket.isValid()) {
-            return;
+        // Attempt to connect to an address until one succeeds
+        for (addrinfo* ptr{ addrInfo }; ptr != NULL; ptr = ptr->ai_next) {
+
+            // Create a SOCKET for connecting to server
+            connectSocket = Network::Socket(ptr->ai_family, ptr->ai_socktype,
+                ptr->ai_protocol);
+            if (!connectSocket.isValid()) {
+                return;
+            }
+
+            // Connect to server.
+            iResult = ::connect(connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+            if (iResult == SOCKET_ERROR) {
+                connectSocket = Network::Socket();
+                continue;
+            }
+            break;
         }
-
-        // Connect to server.
-        iResult = ::connect(connectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-        if (iResult == SOCKET_ERROR) {
-            connectSocket = Network::Socket();
-            continue;
-        }
-        break;
     }
-
-    ::freeaddrinfo(result);
 
     if (!connectSocket.isValid()) {
         return;
