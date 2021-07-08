@@ -3,9 +3,11 @@
   <ItemGroup>
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="winSock.cpp" />
+    <ClCompile Include="addrInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="socket.h" />
     <ClInclude Include="winSock.h" />
+    <ClInclude Include="addrInfo.h" />
   </ItemGroup>
 </Project>
