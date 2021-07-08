@@ -1,13 +1,13 @@
 #include "clientConnection.h"
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <networkLib/winSock.h>
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
 void sendToServer()
 {
-    WSADATA wsaData;
     SOCKET ConnectSocket = INVALID_SOCKET;
     struct addrinfo* result = NULL,
         * ptr = NULL,
@@ -17,12 +17,7 @@ void sendToServer()
     int iResult;
     int recvbuflen = DEFAULT_BUFLEN;
 
-    // Initialize Winsock
-    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (iResult != 0) {
-        //printf("WSAStartup failed with error: %d\n", iResult);
-        //return 1;
-    }
+    Network::WinSock winSock;
 
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
@@ -33,7 +28,7 @@ void sendToServer()
     iResult = getaddrinfo("localhost", DEFAULT_PORT, &hints, &result);
     if (iResult != 0) {
         //printf("getaddrinfo failed with error: %d\n", iResult);
-        WSACleanup();
+        return;
         //return 1;
     }
 
@@ -41,16 +36,16 @@ void sendToServer()
     for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
 
         // Create a SOCKET for connecting to server
-        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,
+        ConnectSocket = ::socket(ptr->ai_family, ptr->ai_socktype,
             ptr->ai_protocol);
         if (ConnectSocket == INVALID_SOCKET) {
             //printf("socket failed with error: %ld\n", WSAGetLastError());
-            WSACleanup();
+            return;
             //return 1;
         }
 
         // Connect to server.
-        iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        iResult = ::connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
         if (iResult == SOCKET_ERROR) {
             closesocket(ConnectSocket);
             ConnectSocket = INVALID_SOCKET;
@@ -63,7 +58,7 @@ void sendToServer()
 
     if (ConnectSocket == INVALID_SOCKET) {
         //printf("Unable to connect to server!\n");
-        WSACleanup();
+        return;
         //return 1;
     }
 
@@ -72,7 +67,7 @@ void sendToServer()
     if (iResult == SOCKET_ERROR) {
         //printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(ConnectSocket);
-        WSACleanup();
+        return;
         //return 1;
     }
 
@@ -83,7 +78,7 @@ void sendToServer()
     if (iResult == SOCKET_ERROR) {
         //printf("shutdown failed with error: %d\n", WSAGetLastError());
         closesocket(ConnectSocket);
-        WSACleanup();
+        return;
         //return 1;
     }
 
@@ -102,5 +97,4 @@ void sendToServer()
 
     // cleanup
     closesocket(ConnectSocket);
-    WSACleanup();
 }
