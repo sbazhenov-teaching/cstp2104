@@ -31,7 +31,7 @@ void serve()
             hints.ai_protocol = IPPROTO_TCP;
             hints.ai_flags = AI_PASSIVE;
 
-            Network::AddrInfo addrInfo{ DEFAULT_PORT, &hints };
+            Network::AddrInfo addrInfo{ nullptr, DEFAULT_PORT, &hints };
             // Create a SOCKET for connecting to server
             listenSocket = Network::Socket{ addrInfo->ai_family, addrInfo->ai_socktype, addrInfo->ai_protocol };
             if (listenSocket == INVALID_SOCKET) {
