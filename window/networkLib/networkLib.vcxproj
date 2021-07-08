@@ -90,10 +90,12 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="addrInfo.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="winSock.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="addrInfo.h" />
     <ClInclude Include="socket.h" />
     <ClInclude Include="winSock.h" />
   </ItemGroup>
