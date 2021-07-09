@@ -104,6 +104,8 @@ LRESULT MainWindow::processMessage(
         mStopping = true;
         assert(mCircleThread.joinable());
         mCircleThread.join();
+        assert(mNetworkThread.joinable());
+        mNetworkThread.join();
         ::PostQuitMessage(0);
         break;
     case WM_MOUSEMOVE:
@@ -157,7 +159,10 @@ void MainWindow::circleThread()
 void MainWindow::networkThread()
 {
     mServer.init();
-    mServer.serve();
+    while (!mStopping)
+    {
+        mServer.serve();
+    }
 }
 
 void MainWindow::getFromClient()
