@@ -16,7 +16,7 @@ public:
     Socket(Socket&&);
     Socket& operator =(Socket&&);
 
-    operator SOCKET() const;
+    operator SOCKET();
     bool isValid() const;
 
     ~Socket();

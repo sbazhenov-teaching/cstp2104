@@ -92,12 +92,12 @@
   <ItemGroup>
     <ClCompile Include="addrInfo.cpp" />
     <ClCompile Include="socket.cpp" />
-    <ClCompile Include="winSock.cpp" />
+    <ClCompile Include="winSockInit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="addrInfo.h" />
     <ClInclude Include="socket.h" />
-    <ClInclude Include="winSock.h" />
+    <ClInclude Include="winSockInit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
