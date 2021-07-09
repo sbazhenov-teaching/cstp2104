@@ -1,7 +1,7 @@
 #include "clientConnection.h"
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <networkLib/winSock.h>
+#include <networkLib/winSockInit.h>
 #include <networkLib/socket.h>
 #include <networkLib/addrInfo.h>
 
@@ -73,7 +73,12 @@ void sendToServer()
         else if (iResult == 0)
             ;// printf("Connection closed\n");
         else
+        {
+            
+            int err{ WSAGetLastError() };
+            ::OutputDebugString(L"ERROR");
             ;// printf("recv failed with error: %d\n", WSAGetLastError());
+        }
 
     } while (iResult > 0);
 }

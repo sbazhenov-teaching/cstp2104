@@ -2,12 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="socket.cpp" />
-    <ClCompile Include="winSock.cpp" />
+    <ClCompile Include="winSockInit.cpp" />
     <ClCompile Include="addrInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="socket.h" />
-    <ClInclude Include="winSock.h" />
+    <ClInclude Include="winSockInit.h" />
     <ClInclude Include="addrInfo.h" />
   </ItemGroup>
 </Project>

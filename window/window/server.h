@@ -1,8 +1,19 @@
 #pragma once
+#include <networkLib/winSockInit.h>
+#include <networkLib/socket.h>
 
-namespace Server
+namespace ServerApp
 {
 
-void serve();
+class Server
+{
+public:
+    void init();
+    Network::Socket acceptClient();
+    void serve();
+private:
+    Network::WinSock mWinSock;
+    Network::Socket mListenSocket;
+};
 
 }

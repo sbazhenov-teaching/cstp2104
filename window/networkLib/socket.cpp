@@ -34,7 +34,7 @@ Socket& Socket::operator=(Socket&& arg)
     return *this;
 }
 
-Socket::operator SOCKET() const
+Socket::operator SOCKET()
 {
     return mSocket;
 }

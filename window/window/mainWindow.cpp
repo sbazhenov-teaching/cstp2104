@@ -4,7 +4,12 @@
 #include <clrWrapper/wrapper.h>
 #include "image.h"
 #include "registry.h"
-#include "server.h"
+//#include "server.h"
+//#include <networkLib/addrInfo.h>
+#include <assert.h>
+
+#define DEFAULT_BUFLEN 512
+#define DEFAULT_PORT "27015"
 
 //class Lambda
 //{
@@ -81,7 +86,11 @@ void MainWindow::onCreate(Window& w)
         //::Sleep(5000);
 
         circleThread();
-        });
+    });
+
+    mNetworkThread = std::thread([this]() {
+        networkThread();
+    });
 
     //auto value{ FunDialog::getValue(w.getHInstance(), w.getHwnd()) };
 }
@@ -122,7 +131,7 @@ LRESULT MainWindow::processMessage(
             break;
         case Input::Key::Space:
             //mThreadPool.post([]() { std::this_thread::sleep_for(std::chrono::seconds(10)); });
-            mThreadPool.post([this]() { getFromClient(); });
+            //mThreadPool.post([this]() { getFromClient(); });
             break;
         }
     }
@@ -145,9 +154,15 @@ void MainWindow::circleThread()
     }
 }
 
+void MainWindow::networkThread()
+{
+    mServer.init();
+    mServer.serve();
+}
+
 void MainWindow::getFromClient()
 {
-    Server::serve();
+    //Server::serve();
 }
 
 void MainWindow::frame()

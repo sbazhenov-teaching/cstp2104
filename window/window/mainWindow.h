@@ -1,4 +1,5 @@
 #pragma once
+#include "server.h"
 #include <Windows.h>
 #include <d2d1.h>
 #include <cstdint>
@@ -21,6 +22,7 @@ private:
     LRESULT processMessage(
         HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void circleThread();
+    void networkThread();
     void getFromClient();
 
     RECT mClientRect;
@@ -37,8 +39,11 @@ private:
     std::mutex mCircleMutex;
     bool mStopping{ false };
 
+    ServerApp::Server mServer;
+
     // Initialization order matters!
     std::thread mCircleThread;
+    std::thread mNetworkThread;
     ThreadPool<2> mThreadPool;
     Window mWindow;
 
