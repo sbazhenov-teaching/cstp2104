@@ -14,21 +14,13 @@ namespace ServerApp
 const wchar_t* cWndClassName{ L"NetworkWindow" };
 
 Server::Server(HINSTANCE hInstance)
-//    : mWindow{
-//        cWndClassName,
-//        (Window::registerClass(cWndClassName), hInstance),
-//        [this](Window& w) { onCreate(w); },
-//        [this](Window& w, UINT message, WPARAM wParam, LPARAM lParam) { return processMessage(w.getHwnd(), message, wParam, lParam); },
-//        L"Network"
-//}
 {
-    mStopEvent = ::CreateEvent(nullptr, FALSE, FALSE, L"NetworkStopEvent");
+    mStopEvent = Handle{ ::CreateEvent(nullptr, FALSE, FALSE, L"NetworkStopEvent") };
 }
 
 Server::~Server()
 {
     ::WSACloseEvent(mListenEvent);
-    ::CloseHandle(mStopEvent);
 }
 
 void Server::init()
@@ -60,7 +52,8 @@ void Server::init()
         }
 
         mListenEvent = ::WSACreateEvent();
-        int selectResult{ WSAEventSelect(mListenSocket, mListenEvent, FD_ACCEPT | FD_CLOSE) };
+        assert(WSA_INVALID_EVENT != mListenEvent);
+        int selectResult{ ::WSAEventSelect(mListenSocket, mListenEvent, FD_ACCEPT | FD_CLOSE) };
         assert(selectResult != SOCKET_ERROR);
 
         {
@@ -85,34 +78,54 @@ void Server::serve()
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
 
-    WSAEVENT allEvents[2];
-    allEvents[0] = mListenEvent;
-    allEvents[1] = mStopEvent;
+    WSAEVENT allEvents[3];
+    allEvents[0] = mStopEvent;
+    allEvents[1] = mListenEvent;
+    allEvents[2] = WSA_INVALID_EVENT;
     WSANETWORKEVENTS networkEvents;
-    bool stopping{ false };
     Network::Socket clientSocket;
-    while (!stopping)
+    int eventNum{ 2 };
+    while (true)
     {
-        DWORD waitResult{ ::WSAWaitForMultipleEvents(2, allEvents, FALSE, WSA_INFINITE, FALSE) };
+        DWORD waitResult{ ::WSAWaitForMultipleEvents(eventNum, allEvents, FALSE, WSA_INFINITE, FALSE) };
+        if (waitResult == WSA_WAIT_EVENT_0)
+        {
+            break;
+        }
+        int enumResult{ ::WSAEnumNetworkEvents(mListenSocket,
+                allEvents[waitResult - WSA_WAIT_EVENT_0], &networkEvents) };
+        assert(enumResult != SOCKET_ERROR);
         switch (waitResult)
         {
-        case WSA_WAIT_EVENT_0:
+        case WSA_WAIT_EVENT_0 + 1:
         {
-            int enumResult{ ::WSAEnumNetworkEvents(mListenSocket,
-                allEvents[waitResult - WSA_WAIT_EVENT_0], &networkEvents) };
-            assert(enumResult != SOCKET_ERROR);
             if (networkEvents.lNetworkEvents & FD_ACCEPT)
             {
-                assert(networkEvents.iErrorCode[FD_ACCEPT_BIT] == 0);
-                clientSocket = acceptClient();
+                // TODO: Fix this mess!
+                if (eventNum == 2) // For now can only accept one client ever
+                {
+                    assert(networkEvents.iErrorCode[FD_ACCEPT_BIT] == 0);
+                    clientSocket = acceptClient();
+                    ++eventNum;
+                    allEvents[2] = ::WSACreateEvent();
+                    assert(WSA_INVALID_EVENT != allEvents[2]);
+                    int selectResult{ ::WSAEventSelect(clientSocket, allEvents[2], FD_READ | FD_WRITE | FD_CLOSE) };
+                    assert(selectResult != SOCKET_ERROR);
+                }
             }
             break;
         }
-        case WSA_WAIT_EVENT_0 + 1:
-            stopping = true;
+        case WSA_WAIT_EVENT_0 + 2:
+            if (networkEvents.lNetworkEvents & FD_READ || networkEvents.lNetworkEvents & FD_WRITE)
+            {
+                ::OutputDebugString(L"Some action!\n");
+            }
             break;
         }
     }
+
+    if(allEvents[2] != WSA_INVALID_EVENT)
+        ::WSACloseEvent(allEvents[2]);
 
     /*
     Network::Socket clientSocket{ acceptClient() };
