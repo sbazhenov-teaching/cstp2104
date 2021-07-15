@@ -2,6 +2,7 @@
 #include <networkLib/winSockInit.h>
 #include <networkLib/socket.h>
 #include <windowLib/window.h>
+#include <windowLib/handle.h>
 
 namespace ServerApp
 {
@@ -19,7 +20,7 @@ private:
     Network::WinSock mWinSock;
     Network::Socket mListenSocket;
     //Window mWindow;
-    HANDLE mStopEvent;
+    Handle mStopEvent;
     WSAEVENT mListenEvent;
 
     void onCreate(Window&);

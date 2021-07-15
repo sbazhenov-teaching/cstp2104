@@ -94,6 +94,7 @@
   <ItemGroup>
     <ClInclude Include="comPtr.h" />
     <ClInclude Include="customButton.h" />
+    <ClInclude Include="handle.h" />
     <ClInclude Include="threadPool.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
@@ -104,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="customButton.cpp" />
+    <ClCompile Include="handle.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
