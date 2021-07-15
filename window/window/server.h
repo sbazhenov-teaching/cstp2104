@@ -18,7 +18,7 @@ public:
     void stop();
 private:
     Network::WinSock mWinSock;
-    Network::Socket mListenSocket;
+    Network::Socket mSockets[2];
     //Window mWindow;
     Handle mStopEvent;
     WSAEVENT mListenEvent;
