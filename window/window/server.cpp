@@ -36,8 +36,8 @@ void Server::init()
 
             Network::AddrInfo addrInfo{ nullptr, DEFAULT_PORT, &hints };
             // Create a SOCKET for connecting to server
-            mListenSocket = Network::Socket{ addrInfo->ai_family, addrInfo->ai_socktype, addrInfo->ai_protocol };
-            if (mListenSocket == INVALID_SOCKET) {
+            mSockets[0] = Network::Socket{ addrInfo->ai_family, addrInfo->ai_socktype, addrInfo->ai_protocol };
+            if (mSockets[0] == INVALID_SOCKET) {
                 return;
             }
 
@@ -46,18 +46,18 @@ void Server::init()
 
             // Setup the TCP listening socket
             {
-                int iResult = ::bind(mListenSocket, addrInfo->ai_addr, (int)addrInfo->ai_addrlen);
+                int iResult = ::bind(mSockets[0], addrInfo->ai_addr, (int)addrInfo->ai_addrlen);
                 assert(iResult != SOCKET_ERROR);
             }
         }
 
         mListenEvent = ::WSACreateEvent();
         assert(WSA_INVALID_EVENT != mListenEvent);
-        int selectResult{ ::WSAEventSelect(mListenSocket, mListenEvent, FD_ACCEPT | FD_CLOSE) };
+        int selectResult{ ::WSAEventSelect(mSockets[0], mListenEvent, FD_ACCEPT | FD_CLOSE) };
         assert(selectResult != SOCKET_ERROR);
 
         {
-            int iResult = ::listen(mListenSocket, SOMAXCONN);
+            int iResult = ::listen(mSockets[0], SOMAXCONN);
             assert(iResult != SOCKET_ERROR);
         }
     }
@@ -65,7 +65,7 @@ void Server::init()
 
 Network::Socket Server::acceptClient()
 {
-    Network::Socket clientSocket{ ::accept(mListenSocket, NULL, NULL) };
+    Network::Socket clientSocket{ ::accept(mSockets[0], NULL, NULL) };
     assert(clientSocket.isValid());
     return clientSocket;
 }
@@ -83,7 +83,6 @@ void Server::serve()
     allEvents[1] = mListenEvent;
     allEvents[2] = WSA_INVALID_EVENT;
     WSANETWORKEVENTS networkEvents;
-    Network::Socket clientSocket;
     int eventNum{ 2 };
     while (true)
     {
@@ -92,7 +91,8 @@ void Server::serve()
         {
             break;
         }
-        int enumResult{ ::WSAEnumNetworkEvents(mListenSocket,
+        ::ZeroMemory(&networkEvents, sizeof(networkEvents));
+        int enumResult{ ::WSAEnumNetworkEvents(mSockets[waitResult - WSA_WAIT_EVENT_0 - 1],
                 allEvents[waitResult - WSA_WAIT_EVENT_0], &networkEvents) };
         assert(enumResult != SOCKET_ERROR);
         switch (waitResult)
@@ -105,11 +105,11 @@ void Server::serve()
                 if (eventNum == 2) // For now can only accept one client ever
                 {
                     assert(networkEvents.iErrorCode[FD_ACCEPT_BIT] == 0);
-                    clientSocket = acceptClient();
+                    mSockets[1] = acceptClient();
                     ++eventNum;
                     allEvents[2] = ::WSACreateEvent();
                     assert(WSA_INVALID_EVENT != allEvents[2]);
-                    int selectResult{ ::WSAEventSelect(clientSocket, allEvents[2], FD_READ | FD_WRITE | FD_CLOSE) };
+                    int selectResult{ ::WSAEventSelect(mSockets[1], allEvents[2], FD_READ | FD_WRITE | FD_CLOSE) };
                     assert(selectResult != SOCKET_ERROR);
                 }
             }
