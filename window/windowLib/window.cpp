@@ -2,8 +2,6 @@
 #include <assert.h>
 #include <limits>
 
-const wchar_t* cWndClassName{ L"ExampleWinApp" };
-
 LRESULT CALLBACK
 Window::windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -47,7 +45,7 @@ HWND Window::getHwnd() const
     return mHwnd;
 }
 
-Window::Window(HINSTANCE hInstance, OnCreate onCreate, OnMessage onMessage, const std::wstring& caption)
+Window::Window(const wchar_t* wndClassName, HINSTANCE hInstance, OnCreate onCreate, OnMessage onMessage, const std::wstring& caption)
     : mOnCreate{ std::move(onCreate) }
     , mOnMessage{ std::move(onMessage) }
     , mHInstance{ hInstance }
@@ -56,7 +54,7 @@ Window::Window(HINSTANCE hInstance, OnCreate onCreate, OnMessage onMessage, cons
     // | - bitwise or
     ::CreateWindowEx(
         0,
-        cWndClassName,
+        wndClassName,
         caption.c_str(),
         (WS_VISIBLE | WS_OVERLAPPEDWINDOW) & ~WS_THICKFRAME,
         CW_USEDEFAULT,
@@ -69,7 +67,7 @@ Window::Window(HINSTANCE hInstance, OnCreate onCreate, OnMessage onMessage, cons
         this);
 }
 
-void Window::registerClass()
+void Window::registerClass(const wchar_t* wndClassName)
 {
     HINSTANCE module = ::GetModuleHandle(NULL);
 
@@ -78,7 +76,7 @@ void Window::registerClass()
     windowClass.lpfnWndProc = windowProc;
     windowClass.hInstance = module;
     windowClass.hCursor = ::LoadCursor(NULL, IDC_ARROW);
-    windowClass.lpszClassName = cWndClassName;
+    windowClass.lpszClassName = wndClassName;
     const ATOM registered = ::RegisterClassEx(&windowClass);
     if(!registered)
     {

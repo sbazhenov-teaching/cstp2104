@@ -10,6 +10,7 @@
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
+const wchar_t* cWndClassName{ L"ExampleWinApp" };
 
 //class Lambda
 //{
@@ -21,8 +22,10 @@
 //};
 
 MainWindow::MainWindow(HINSTANCE hInstance)
-    : mWindow{
-        (Window::registerClass(), hInstance),
+    : mServer{ hInstance },
+    mWindow{
+        cWndClassName,
+        (Window::registerClass(cWndClassName), hInstance),
         [this](Window& w) { onCreate(w); },
         [this](Window& w, UINT message, WPARAM wParam, LPARAM lParam) { return processMessage(w.getHwnd(), message, wParam, lParam); },
         Registry::getStrKey(HKEY_CURRENT_USER, L"SOFTWARE\\CSTP2104\\WindowApp\0asdfasdf", L"Caption")
@@ -104,6 +107,7 @@ LRESULT MainWindow::processMessage(
         mStopping = true;
         assert(mCircleThread.joinable());
         mCircleThread.join();
+        mServer.stop();
         assert(mNetworkThread.joinable());
         mNetworkThread.join();
         ::PostQuitMessage(0);
