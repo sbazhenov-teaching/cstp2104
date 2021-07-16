@@ -64,21 +64,21 @@ void sendToServer()
         return;
     }
 
-    // Receive until the peer closes the connection
-    do {
+    //// Receive until the peer closes the connection
+    //do {
 
-        iResult = ::recv(connectSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0)
-            ;// printf("Bytes received: %d\n", iResult);
-        else if (iResult == 0)
-            ;// printf("Connection closed\n");
-        else
-        {
-            
-            int err{ WSAGetLastError() };
-            ::OutputDebugString(L"ERROR");
-            ;// printf("recv failed with error: %d\n", WSAGetLastError());
-        }
+    //    iResult = ::recv(connectSocket, recvbuf, recvbuflen, 0);
+    //    if (iResult > 0)
+    //        ;// printf("Bytes received: %d\n", iResult);
+    //    else if (iResult == 0)
+    //        ;// printf("Connection closed\n");
+    //    else
+    //    {
+    //        
+    //        int err{ WSAGetLastError() };
+    //        ::OutputDebugString(L"ERROR");
+    //        ;// printf("recv failed with error: %d\n", WSAGetLastError());
+    //    }
 
-    } while (iResult > 0);
+    //} while (iResult > 0);
 }

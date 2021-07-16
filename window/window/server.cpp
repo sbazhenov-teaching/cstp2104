@@ -12,6 +12,7 @@ namespace ServerApp
 {
 
 const wchar_t* cWndClassName{ L"NetworkWindow" };
+const unsigned cBufSize{ 0x100 };
 
 Server::Server(HINSTANCE hInstance)
 {
@@ -84,6 +85,11 @@ void Server::serve()
     allEvents[2] = WSA_INVALID_EVENT;
     WSANETWORKEVENTS networkEvents;
     int eventNum{ 2 };
+
+    std::vector<char> buf(cBufSize);
+    WSABUF bufStruct;
+    bufStruct.buf = buf.data();
+    bufStruct.len = buf.size();
     while (true)
     {
         DWORD waitResult{ ::WSAWaitForMultipleEvents(eventNum, allEvents, FALSE, WSA_INFINITE, FALSE) };
@@ -92,7 +98,8 @@ void Server::serve()
             break;
         }
         ::ZeroMemory(&networkEvents, sizeof(networkEvents));
-        int enumResult{ ::WSAEnumNetworkEvents(mSockets[waitResult - WSA_WAIT_EVENT_0 - 1],
+        SOCKET sock{ mSockets[waitResult - WSA_WAIT_EVENT_0 - 1] };
+        int enumResult{ ::WSAEnumNetworkEvents(sock,
                 allEvents[waitResult - WSA_WAIT_EVENT_0], &networkEvents) };
         assert(enumResult != SOCKET_ERROR);
         switch (waitResult)
@@ -119,6 +126,16 @@ void Server::serve()
             if (networkEvents.lNetworkEvents & FD_READ || networkEvents.lNetworkEvents & FD_WRITE)
             {
                 ::OutputDebugString(L"Some action!\n");
+                assert(!(networkEvents.lNetworkEvents & FD_READ) || networkEvents.iErrorCode[FD_READ_BIT] == 0);
+                assert(!(networkEvents.lNetworkEvents & FD_WRITE) || networkEvents.iErrorCode[FD_WRITE_BIT] == 0);
+
+                if (networkEvents.lNetworkEvents & FD_READ)
+                {
+                    DWORD received{ 0 };
+                    DWORD flags{ 0 };
+                    int recvResult{ ::WSARecv(sock, &bufStruct, 1, &received, &flags, nullptr, nullptr) };
+                    assert(recvResult != SOCKET_ERROR);
+                }
             }
             break;
         }
