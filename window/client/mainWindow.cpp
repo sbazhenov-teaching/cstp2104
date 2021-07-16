@@ -1,5 +1,7 @@
-#include "mainWindow.h"
 #include "clientConnection.h"
+#include "mainWindow.h"
+
+ClientConnection gClientConnection;
 
 INT_PTR MainDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -9,6 +11,7 @@ INT_PTR MainDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
     {
         HWND button{ ::GetDlgItem(hwnd, IDC_BUTTON1) };
         MainDialog* dialog{ reinterpret_cast<MainDialog*>(lParam) };
+        gClientConnection.init();
         return TRUE;
     }
     case WM_COMMAND:
@@ -19,11 +22,12 @@ INT_PTR MainDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
             ::EndDialog(hwnd, 10);
             return TRUE;
         case IDC_BUTTON1:
-            sendToServer();
+            gClientConnection.sendToServer();
             ::EndDialog(hwnd, 10);
             return TRUE;
         }
     case WM_DESTROY:
+        gClientConnection.shutdown();
         return TRUE;
     }
     return FALSE;
