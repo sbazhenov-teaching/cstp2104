@@ -6,6 +6,7 @@
     <ClInclude Include="customButton.h" />
     <ClInclude Include="threadPool.h" />
     <ClInclude Include="handle.h" />
+    <ClInclude Include="keys.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="window.cpp" />

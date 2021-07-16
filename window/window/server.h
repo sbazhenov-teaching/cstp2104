@@ -3,6 +3,7 @@
 #include <networkLib/socket.h>
 #include <windowLib/window.h>
 #include <windowLib/handle.h>
+#include <functional>
 
 namespace ServerApp
 {
@@ -12,7 +13,10 @@ class Server
 public:
     Server(HINSTANCE hInstance);
     ~Server();
-    void init();
+
+    using ReceiveCallback = std::function<void(unsigned)>;
+
+    void init(ReceiveCallback);
     Network::Socket acceptClient();
     void serve();
     void stop();
@@ -22,6 +26,7 @@ private:
     //Window mWindow;
     Handle mStopEvent;
     WSAEVENT mListenEvent;
+    ReceiveCallback mReceiveCallback;
 
     void onCreate(Window&);
     LRESULT processMessage(
