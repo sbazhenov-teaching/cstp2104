@@ -31,7 +31,7 @@ void Input::init(HWND hwnd)
     assert(registered == TRUE);
 }
 
-Input::Key Input::process(LPARAM lParam)
+Key Input::process(LPARAM lParam)
 {
     RAWINPUT input;
     {

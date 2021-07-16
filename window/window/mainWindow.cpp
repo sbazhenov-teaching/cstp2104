@@ -118,32 +118,37 @@ LRESULT MainWindow::processMessage(
         break;
     case WM_INPUT:
     {
-        Input::Key key{ mInput.process(lParam) };
-        const float step{ 10 };
+        Key key{ mInput.process(lParam) };
         std::lock_guard<std::mutex> lock(mCircleMutex);
-        switch (key)
-        {
-        case Input::Key::Right:
-            mX += step;
-            break;
-        case Input::Key::Left:
-            mX -= step;
-            break;
-        case Input::Key::Down:
-            mY += step;
-            break;
-        case Input::Key::Up:
-            mY -= step;
-            break;
-        case Input::Key::Space:
-            //mThreadPool.post([]() { std::this_thread::sleep_for(std::chrono::seconds(10)); });
-            //mThreadPool.post([this]() { getFromClient(); });
-            break;
-        }
+        processKey(key);
     }
         break;
     }
     return ::DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+void MainWindow::processKey(Key key)
+{
+    const float step{ 10 };
+    switch (key)
+    {
+    case Key::Right:
+        mX += step;
+        break;
+    case Key::Left:
+        mX -= step;
+        break;
+    case Key::Down:
+        mY += step;
+        break;
+    case Key::Up:
+        mY -= step;
+        break;
+    case Key::Space:
+        //mThreadPool.post([]() { std::this_thread::sleep_for(std::chrono::seconds(10)); });
+        //mThreadPool.post([this]() { getFromClient(); });
+        break;
+    }
 }
 
 void MainWindow::circleThread()
@@ -162,7 +167,7 @@ void MainWindow::circleThread()
 
 void MainWindow::networkThread()
 {
-    mServer.init();
+    mServer.init([this](unsigned arg) { processKey(static_cast<Key>(arg)); });
     while (!mStopping)
     {
         mServer.serve();

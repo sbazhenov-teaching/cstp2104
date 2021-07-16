@@ -21,6 +21,7 @@ private:
     void onCreate(Window&);
     LRESULT processMessage(
         HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+    void processKey(Key);
     void circleThread();
     void networkThread();
     void getFromClient();
