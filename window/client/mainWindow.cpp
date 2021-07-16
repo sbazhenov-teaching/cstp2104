@@ -9,7 +9,7 @@ INT_PTR MainDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
     {
     case WM_INITDIALOG:
     {
-        HWND button{ ::GetDlgItem(hwnd, IDC_BUTTON1) };
+        HWND button{ ::GetDlgItem(hwnd, IDC_BUTTON_UP) };
         MainDialog* dialog{ reinterpret_cast<MainDialog*>(lParam) };
         gClientConnection.init();
         return TRUE;
@@ -21,9 +21,18 @@ INT_PTR MainDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
         case IDCANCEL:
             ::EndDialog(hwnd, 10);
             return TRUE;
-        case IDC_BUTTON1:
-            gClientConnection.sendToServer();
-            ::EndDialog(hwnd, 10);
+        case IDC_BUTTON_UP:
+            gClientConnection.sendToServer(Key::Up);
+            //::EndDialog(hwnd, 10);
+            return TRUE;
+        case IDC_BUTTON_DOWN:
+            gClientConnection.sendToServer(Key::Down);
+            return TRUE;
+        case IDC_BUTTON_LEFT:
+            gClientConnection.sendToServer(Key::Left);
+            return TRUE;
+        case IDC_BUTTON_RIGHT:
+            gClientConnection.sendToServer(Key::Right);
             return TRUE;
         }
     case WM_DESTROY:

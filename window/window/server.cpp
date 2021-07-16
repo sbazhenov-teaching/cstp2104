@@ -24,8 +24,9 @@ Server::~Server()
     ::WSACloseEvent(mListenEvent);
 }
 
-void Server::init()
+void Server::init(ReceiveCallback receiveCallback)
 {
+    mReceiveCallback = std::move(receiveCallback);
     {
         {
             struct addrinfo hints;
@@ -86,10 +87,11 @@ void Server::serve()
     WSANETWORKEVENTS networkEvents;
     int eventNum{ 2 };
 
-    std::vector<char> buf(cBufSize);
+    //std::vector<char> buf(cBufSize);
+    char buf[cBufSize];
     WSABUF bufStruct;
-    bufStruct.buf = buf.data();
-    bufStruct.len = buf.size();
+    bufStruct.buf = buf;
+    bufStruct.len = cBufSize;
     while (true)
     {
         DWORD waitResult{ ::WSAWaitForMultipleEvents(eventNum, allEvents, FALSE, WSA_INFINITE, FALSE) };
@@ -133,8 +135,15 @@ void Server::serve()
                 {
                     DWORD received{ 0 };
                     DWORD flags{ 0 };
+                    // TODO: read more
                     int recvResult{ ::WSARecv(sock, &bufStruct, 1, &received, &flags, nullptr, nullptr) };
                     assert(recvResult != SOCKET_ERROR);
+                    for (DWORD processed{ 0 }; processed < received; processed += sizeof(unsigned))
+                    {
+                        unsigned incoming = *reinterpret_cast<unsigned*>(buf + processed);
+                        ::OutputDebugString(L"One integer!\n");
+                        mReceiveCallback(incoming);
+                    }
                 }
             }
             break;

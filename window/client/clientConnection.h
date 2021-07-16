@@ -1,12 +1,13 @@
 #pragma once
 #include <networkLib/winSockInit.h>
 #include <networkLib/socket.h>
+#include <windowLib/keys.h>
 
 class ClientConnection
 {
 public:
     void init();
-    void sendToServer();
+    void sendToServer(Key);
     void shutdown();
 private:
     Network::WinSock mWinSock;

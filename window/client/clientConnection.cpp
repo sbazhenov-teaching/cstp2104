@@ -7,10 +7,12 @@
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
-void ClientConnection::sendToServer()
+void ClientConnection::sendToServer(Key arg)
 {
-    const char* sendbuf = "this is a test";
-    int iResult{ ::send(mConnectSocket, sendbuf, (int)strlen(sendbuf), 0) };
+    //unsigned ints[2];
+    //const char* sendbuf = "{value: 43453, asdfasdf: 345346}";
+    int iResult{ ::send(mConnectSocket, reinterpret_cast<const char*>(&arg), sizeof(arg), 0) };
+    //int iResult{ ::send(mConnectSocket, reinterpret_cast<const char*>(ints), sizeof(ints), 0) };
     assert(iResult != SOCKET_ERROR);
 }
 
