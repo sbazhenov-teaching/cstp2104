@@ -12,7 +12,7 @@ BreakBeforeBraces: Allman
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 BreakStringLiterals: true
-ColumnLimit: 140
+ColumnLimit: 100
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 IndentWidth: 4
 NamespaceIndentation: None

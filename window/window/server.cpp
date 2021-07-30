@@ -3,6 +3,7 @@
 #include <ws2tcpip.h>
 #include <networkLib/addrInfo.h>
 #include <assert.h>
+#include <windowLib/keys.h>
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
@@ -138,12 +139,44 @@ void Server::serve()
                     // TODO: read more
                     int recvResult{ ::WSARecv(sock, &bufStruct, 1, &received, &flags, nullptr, nullptr) };
                     assert(recvResult != SOCKET_ERROR);
-                    for (DWORD processed{ 0 }; processed < received; processed += sizeof(unsigned))
+
+
+
+                    for (DWORD processed{0}; processed < received && true /*processed +  <= received*/;)
                     {
-                        unsigned incoming = *reinterpret_cast<unsigned*>(buf + processed);
-                        ::OutputDebugString(L"One integer!\n");
-                        mReceiveCallback(incoming);
+                        switch (mState)
+                        {
+                        case State::Command:
+                        {
+                            Command command = *reinterpret_cast<Command *>(buf + processed);
+                            mExpectedValue = command;
+                            processed += sizeof(command);
+                        }
+                        case State::Value:
+                        {
+                            switch (mExpectedValue)
+                            {
+                            case Command::Direction:
+                            {
+                                KeyType incoming = *reinterpret_cast<KeyType *>(buf + processed);
+                                ::OutputDebugString(L"One short!\n");
+                                mReceiveCallback(incoming);
+                                processed += sizeof(incoming);
+                            }
+                            case Command::Step:
+                                ;
+                            }
+                        }
+                        }
+
+
                     }
+                    //for (DWORD processed{0}; processed < received; processed += sizeof(KeyType))
+                    //{
+                    //    KeyType incoming = *reinterpret_cast<KeyType *>(buf + processed);
+                    //    ::OutputDebugString(L"One short!\n");
+                    //    mReceiveCallback(incoming);
+                    //}
                 }
             }
             break;

@@ -167,7 +167,7 @@ void MainWindow::circleThread()
 
 void MainWindow::networkThread()
 {
-    mServer.init([this](unsigned arg) { processKey(static_cast<Key>(arg)); });
+    mServer.init([this](unsigned short arg) { processKey(static_cast<Key>(arg)); });
     while (!mStopping)
     {
         mServer.serve();
