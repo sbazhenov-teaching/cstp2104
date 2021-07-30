@@ -158,7 +158,7 @@ void MainWindow::circleThread()
         std::this_thread::sleep_for(std::chrono::milliseconds(33));
 
         std::unique_lock<std::mutex> lock(mCircleMutex);
-        mX += 1;
+        //mX += 1;
         //mCircleMutex.lock();
         //// do whatever - exclusive access guaranteed
         //mCircleMutex.unlock();

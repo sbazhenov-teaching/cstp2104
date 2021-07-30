@@ -1,5 +1,7 @@
 #include "clientConnection.h"
 #include "mainWindow.h"
+#include <string>
+#include <stdexcept>
 
 ClientConnection gClientConnection;
 
@@ -34,6 +36,22 @@ INT_PTR MainDialog::Dlgproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
         case IDC_BUTTON_RIGHT:
             gClientConnection.sendToServer(Key::Right);
             return TRUE;
+        case IDC_BUTTON_STEPS:
+        {
+            std::wstring str;
+            str.resize(10);
+            UINT strSize{::GetDlgItemText(hwnd, IDC_EDIT1, str.data(), str.size())};
+            try
+            {
+                int steps{std::stoi(str)};
+                gClientConnection.sendToServer(steps);
+            }
+            catch (const std::exception& e)
+            {
+                ::OutputDebugString(L"Invalid value");
+            }
+            return TRUE;
+        }
         }
     case WM_DESTROY:
         gClientConnection.shutdown();

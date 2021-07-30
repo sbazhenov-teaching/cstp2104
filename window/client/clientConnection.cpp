@@ -2,19 +2,9 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <networkLib/addrInfo.h>
-#include <assert.h>
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
-
-void ClientConnection::sendToServer(Key arg)
-{
-    //unsigned ints[2];
-    //const char* sendbuf = "{value: 43453, asdfasdf: 345346}";
-    int iResult{ ::send(mConnectSocket, reinterpret_cast<const char*>(&arg), sizeof(arg), 0) };
-    //int iResult{ ::send(mConnectSocket, reinterpret_cast<const char*>(ints), sizeof(ints), 0) };
-    assert(iResult != SOCKET_ERROR);
-}
 
 void ClientConnection::shutdown()
 {

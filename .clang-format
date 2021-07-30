@@ -1,0 +1,23 @@
+BasedOnStyle: LLVM
+
+AccessModifierOffset: -4
+AlignAfterOpenBracket: AlwaysBreak
+AllowAllArgumentsOnNextLine: true
+AllowAllConstructorInitializersOnNextLine: false
+AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBraces: Allman
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+BreakStringLiterals: true
+ColumnLimit: 140
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+IndentWidth: 4
+NamespaceIndentation: None
+PointerAlignment: Right
+SortIncludes: true
+TabWidth: 4
+UseTab: Never
+AlignConsecutiveAssignments: false
