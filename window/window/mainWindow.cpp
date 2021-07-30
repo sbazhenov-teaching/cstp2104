@@ -119,7 +119,7 @@ LRESULT MainWindow::processMessage(
     case WM_INPUT:
     {
         Key key{ mInput.process(lParam) };
-        std::lock_guard<std::mutex> lock(mCircleMutex);
+        //std::lock_guard<std::mutex> lock(mCircleMutex);
         processKey(key);
     }
         break;
@@ -129,26 +129,32 @@ LRESULT MainWindow::processMessage(
 
 void MainWindow::processKey(Key key)
 {
-    const float step{ 10 };
+    std::unique_lock<std::mutex> lock(mCircleMutex);
     switch (key)
     {
     case Key::Right:
-        mX += step;
+        mX += mStep;
         break;
     case Key::Left:
-        mX -= step;
+        mX -= mStep;
         break;
     case Key::Down:
-        mY += step;
+        mY += mStep;
         break;
     case Key::Up:
-        mY -= step;
+        mY -= mStep;
         break;
     case Key::Space:
         //mThreadPool.post([]() { std::this_thread::sleep_for(std::chrono::seconds(10)); });
         //mThreadPool.post([this]() { getFromClient(); });
         break;
     }
+}
+
+void MainWindow::setStep(unsigned arg)
+{
+    std::unique_lock<std::mutex> lock(mCircleMutex);
+    mStep = arg;
 }
 
 void MainWindow::circleThread()
@@ -167,7 +173,9 @@ void MainWindow::circleThread()
 
 void MainWindow::networkThread()
 {
-    mServer.init([this](unsigned short arg) { processKey(static_cast<Key>(arg)); });
+    mServer.init(
+        [this](unsigned short arg) { processKey(static_cast<Key>(arg)); },
+        [this](unsigned arg) { setStep(arg); });
     while (!mStopping)
     {
         mServer.serve();

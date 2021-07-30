@@ -23,9 +23,10 @@ public:
     ~Server();
 
     using KeyType = unsigned short;
-    using ReceiveCallback = std::function<void(KeyType)>;
+    using KeyCallback = std::function<void(KeyType)>;
+    using StepCallback = std::function<void(unsigned)>;
 
-    void init(ReceiveCallback);
+    void init(KeyCallback, StepCallback);
     Network::Socket acceptClient();
     void serve();
     void stop();
@@ -37,7 +38,8 @@ private:
     //Window mWindow;
     Handle mStopEvent;
     WSAEVENT mListenEvent;
-    ReceiveCallback mReceiveCallback;
+    KeyCallback mKeyCallback;
+    StepCallback mStepCallback;
 
     void onCreate(Window&);
     LRESULT processMessage(

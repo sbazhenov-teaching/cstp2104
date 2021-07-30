@@ -47,7 +47,7 @@ INT_PTR MainDialog::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
         {
             // FIXME
             gClientConnection.sendToServer(Command::Step);
-            gClientConnection.sendToServer(1);
+            gClientConnection.sendToServer(30);
             //std::wstring str;
             //str.resize(10);
             //UINT strSize{::GetDlgItemText(hwnd, IDC_EDIT1, str.data(), str.size())};

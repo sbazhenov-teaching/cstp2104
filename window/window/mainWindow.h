@@ -22,6 +22,7 @@ private:
     LRESULT processMessage(
         HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void processKey(Key);
+    void setStep(unsigned);
     void circleThread();
     void networkThread();
     void getFromClient();
@@ -37,6 +38,7 @@ private:
 
     uint32_t mX{ 0 };
     uint32_t mY{ 0 };
+    unsigned mStep{1};
     std::mutex mCircleMutex;
     bool mStopping{ false };
 

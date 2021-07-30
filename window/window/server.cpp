@@ -25,9 +25,10 @@ Server::~Server()
     ::WSACloseEvent(mListenEvent);
 }
 
-void Server::init(ReceiveCallback receiveCallback)
+void Server::init(KeyCallback keyCallback, StepCallback stepCallback)
 {
-    mReceiveCallback = std::move(receiveCallback);
+    mKeyCallback = std::move(keyCallback);
+    mStepCallback = std::move(stepCallback);
     {
         {
             struct addrinfo hints;
@@ -90,6 +91,7 @@ void Server::serve()
 
     //std::vector<char> buf(cBufSize);
     char buf[cBufSize];
+    DWORD offset{0};
     WSABUF bufStruct;
     bufStruct.buf = buf;
     bufStruct.len = cBufSize;
@@ -140,9 +142,9 @@ void Server::serve()
                     int recvResult{ ::WSARecv(sock, &bufStruct, 1, &received, &flags, nullptr, nullptr) };
                     assert(recvResult != SOCKET_ERROR);
 
-
-
-                    for (DWORD processed{0}; processed < received && true /*processed +  <= received*/;)
+                    DWORD processed{offset};
+                    bool stop{false};
+                    while (!stop && processed < received)
                     {
                         switch (mState)
                         {
@@ -150,7 +152,9 @@ void Server::serve()
                         {
                             Command command = *reinterpret_cast<Command *>(buf + processed);
                             mExpectedValue = command;
+                            mState = State::Value;
                             processed += sizeof(command);
+                            break;
                         }
                         case State::Value:
                         {
@@ -158,19 +162,43 @@ void Server::serve()
                             {
                             case Command::Direction:
                             {
-                                KeyType incoming = *reinterpret_cast<KeyType *>(buf + processed);
-                                ::OutputDebugString(L"One short!\n");
-                                mReceiveCallback(incoming);
-                                processed += sizeof(incoming);
+                                if (processed + sizeof(KeyType) > received)
+                                {
+                                    ::memcpy(buf, buf + processed, received - processed);
+                                    stop = true;
+                                }
+                                else
+                                {
+                                    KeyType incoming =
+                                        *reinterpret_cast<KeyType *>(buf + processed);
+                                    ::OutputDebugString(L"One short!\n");
+                                    mKeyCallback(incoming);
+                                    processed += sizeof(KeyType);
+                                }
+                                break;
                             }
                             case Command::Step:
-                                ;
+                                if (processed + sizeof(KeyType) > received)
+                                {
+                                    ::memcpy(buf, buf + processed, received - processed);
+                                    stop = true;
+                                }
+                                else
+                                {
+                                    unsigned incoming =
+                                        *reinterpret_cast<unsigned *>(buf + processed);
+                                    ::OutputDebugString(L"One unsigned!\n");
+                                    mStepCallback(incoming);
+                                    processed += sizeof(incoming);
+                                }
+                                break;
                             }
+                            mState = State::Command;
+                            break;
                         }
                         }
-
-
                     }
+                    offset = received - processed;
                     //for (DWORD processed{0}; processed < received; processed += sizeof(KeyType))
                     //{
                     //    KeyType incoming = *reinterpret_cast<KeyType *>(buf + processed);
